@@ -40,7 +40,7 @@ namespace Utility_funcs
 
             public void findandLink()
             {
-                ObjectIdCollection Lines = getAllObjectsWithDic("DIMINC_LINE");
+                ObjectIdCollection Lines = tr.getAllObjectsWithDic("DIMINC_LINE");
 
                 foreach (ObjectId id in Lines)
                 {
@@ -55,7 +55,7 @@ namespace Utility_funcs
                     {
                         tag = tv.Value.ToString();
                     }
-                    ObjectId texts = getGroupWithTag(tag);
+                    ObjectId texts = tr.getGroupWithTag(tag);
 
                     //LINK WITH THE MOD CLASS
                     DimMod.Add_Events(id, texts);
@@ -64,47 +64,6 @@ namespace Utility_funcs
                 }
 
 
-            }
-
-            public ObjectId getGroupWithTag(string tag)
-            {
-                Transaction trans = tr.start_Transaction();
-                DBDictionary gd = tr.openGroupDictionary(OpenMode.ForRead);
-                if(gd.Contains(tag))
-                {
-                    trans.Commit();
-                    trans.Dispose();
-                    return gd.GetAt(tag);
-                }
-                else
-                {
-                    trans.Commit();
-                    trans.Dispose();
-                    return ObjectId.Null;
-                }
-            }
-
-            public ObjectIdCollection getAllObjectsWithDic(string searchPath)
-            {
-                ObjectIdCollection objs = new ObjectIdCollection(); 
-                Transaction trans = tr.start_Transaction();
-                tr.AC_Db = tr.AC_Doc.Database;
-                tr.openBlockTables(OpenMode.ForRead, OpenMode.ForRead);
-                foreach (ObjectId id in tr.AC_blockTableRecord)
-                {
-                    DBObject dbObj = trans.GetObject(id, OpenMode.ForRead) as DBObject;
-                    ObjectId dic = dbObj.ExtensionDictionary;
-                    if (dic != ObjectId.Null)
-                    {
-                        DBDictionary dbDic = (DBDictionary)trans.GetObject(dic, OpenMode.ForRead);
-                        if (dbDic.Contains(searchPath))
-                        {
-                            objs.Add(id);
-                        }
-                    }
-                }
-                tr.Dispose();
-                return objs;
             }
 
             public void Terminate()
@@ -332,7 +291,6 @@ namespace Utility_funcs
             private ObjectId DimInc_Modtexts;
             public AC_Transactions tr;
             private gripPointModified gripMod;
-            private bool needOverrule = true;
 
             public DimInc_Modified()
             {
@@ -343,36 +301,7 @@ namespace Utility_funcs
             {
                 DimInc_Mod = DimInc;
                 DimInc_Modtexts = DimTexts;
-                tr.AC_Doc.Editor.SelectionAdded += Editor_SelectionAdded;
-                tr.AC_Doc.Editor.SelectionRemoved += Editor_SelectionRemoved;
-
                 gripMod = new gripPointModified(DimInc, DimTexts);
-            }
-
-            private void Editor_SelectionRemoved(object sender, SelectionRemovedEventArgs e)
-            {
-                foreach (ObjectId id in e.RemovedObjects.GetObjectIds())
-                {
-                    if (id == DimInc_Mod && needOverrule)
-                    {
-                        tr.AC_Doc.Editor.PromptedForPoint -= gripMod.Editor_PromptedForPoint;
-                        tr.AC_Doc.Editor.DraggingEnded -= gripMod.Editor_DraggingEnded;
-                        needOverrule = true;
-                        ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(Entity)), gripMod);
-                    }
-                }
-            }
-
-            void Editor_SelectionAdded(object sender, SelectionAddedEventArgs e)
-            {
-                foreach (ObjectId id in e.AddedObjects.GetObjectIds())
-                {
-                    if (id == DimInc_Mod && needOverrule)
-                    {
-                        needOverrule = false;
-                        ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(Entity)), gripMod, true);
-                    }
-                }
             }
 
             public class gripPointModified : GripOverrule
@@ -388,6 +317,7 @@ namespace Utility_funcs
                 List<Point3d> midPoints;
                 private bool done;
                 private bool needRefresh;
+                private bool needOverrule = true;
 
                 public gripPointModified(ObjectId DimInc, ObjectId DimTexts)
                 {
@@ -407,6 +337,8 @@ namespace Utility_funcs
                     ids = new ObjectId[1] { DimInc_pLine };
                     SetIdFilter(ids);
                     tr.AC_Doc.Editor.PointMonitor += Editor_PointMonitor;
+                    tr.AC_Doc.Editor.SelectionAdded +=Editor_SelectionAdded;
+                    tr.AC_Doc.Editor.SelectionRemoved += Editor_SelectionRemoved;
                     Application.DocumentManager.DocumentDestroyed += DocumentManager_DocumentDestroyed;
                 }
 
@@ -418,8 +350,6 @@ namespace Utility_funcs
                 public override void MoveGripPointsAt(Entity entity, IntegerCollection indices, Vector3d offset)
                 {
                     base.MoveGripPointsAt(entity, indices, offset);
-                    tr.AC_Doc.Editor.PromptedForPoint += Editor_PromptedForPoint;
-                    tr.AC_Doc.Editor.DraggingEnded += Editor_DraggingEnded;
 
                     if (Gripindex != null || GripIndexs[0] != null && GripIndexs[1] != null)
                     {
@@ -575,6 +505,34 @@ namespace Utility_funcs
                             }
                         }
                         tr.closeObject();
+                    }
+                }
+
+                void Editor_SelectionRemoved(object sender, SelectionRemovedEventArgs e)
+                {
+                    foreach (ObjectId id in e.RemovedObjects.GetObjectIds())
+                    {
+                        if (id == DimInc_pLine && needOverrule)
+                        {
+                            tr.AC_Doc.Editor.PromptedForPoint -= this.Editor_PromptedForPoint;
+                            tr.AC_Doc.Editor.DraggingEnded -= this.Editor_DraggingEnded;
+                            ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(Entity)), this);
+                            needOverrule = true;
+                        }
+                    }
+                }
+
+                void Editor_SelectionAdded(object sender, SelectionAddedEventArgs e)
+                {
+                    foreach (ObjectId id in e.AddedObjects.GetObjectIds())
+                    {
+                        if (id == DimInc_pLine && needOverrule)
+                        {
+                            tr.AC_Doc.Editor.PromptedForPoint += this.Editor_PromptedForPoint;
+                            tr.AC_Doc.Editor.DraggingEnded += this.Editor_DraggingEnded;
+                            ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(Entity)), this, true);
+                            needOverrule = false;
+                        }
                     }
                 }
 

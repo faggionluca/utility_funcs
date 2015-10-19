@@ -7,6 +7,7 @@
 *.userosscache
 *.sln.docstates
 autocad-arx_pull.bat
+autocad-arx_push.bat
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

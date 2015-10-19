@@ -202,5 +202,50 @@ namespace AutoCad_ARX
             group.Dispose();
             end_Transaction();
         }
+
+
+        //GET FUNCTIONS/////////////////////////////////////////////////////////////////////////////////
+
+        public ObjectId getGroupWithTag(string tag)
+        {
+            start_Transaction();
+            DBDictionary gd = openGroupDictionary(OpenMode.ForRead);
+            if (gd.Contains(tag))
+            {
+                AC_Tr.Commit();
+                AC_Tr.Dispose();
+                return gd.GetAt(tag);
+            }
+            else
+            {
+                AC_Tr.Commit();
+                AC_Tr.Dispose();
+                return ObjectId.Null;
+            }
+        }
+
+        public ObjectIdCollection getAllObjectsWithDic(string searchPath)
+        {
+            ObjectIdCollection objs = new ObjectIdCollection();
+            start_Transaction();
+            AC_Db = AC_Doc.Database;
+            openBlockTables(OpenMode.ForRead, OpenMode.ForRead);
+            foreach (ObjectId id in AC_blockTableRecord)
+            {
+                DBObject dbObj = AC_Tr.GetObject(id, OpenMode.ForRead) as DBObject;
+                ObjectId dic = dbObj.ExtensionDictionary;
+                if (dic != ObjectId.Null)
+                {
+                    DBDictionary dbDic = (DBDictionary)AC_Tr.GetObject(dic, OpenMode.ForRead);
+                    if (dbDic.Contains(searchPath))
+                    {
+                        objs.Add(id);
+                    }
+                }
+            }
+            AC_Tr.Dispose();
+            return objs;
+        }
+
     }
 }

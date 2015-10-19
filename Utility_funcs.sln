@@ -8,11 +8,20 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		External Debug|Any CPU = External Debug|Any CPU
+		External|Any CPU = External|Any CPU
+		ExternalDebug|Any CPU = ExternalDebug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C4BE7C63-7885-4B53-9395-068588F762DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C4BE7C63-7885-4B53-9395-068588F762DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4BE7C63-7885-4B53-9395-068588F762DC}.External Debug|Any CPU.ActiveCfg = External Debug|Any CPU
+		{C4BE7C63-7885-4B53-9395-068588F762DC}.External Debug|Any CPU.Build.0 = External Debug|Any CPU
+		{C4BE7C63-7885-4B53-9395-068588F762DC}.External|Any CPU.ActiveCfg = External|Any CPU
+		{C4BE7C63-7885-4B53-9395-068588F762DC}.External|Any CPU.Build.0 = External|Any CPU
+		{C4BE7C63-7885-4B53-9395-068588F762DC}.ExternalDebug|Any CPU.ActiveCfg = ExternalDebug|Any CPU
+		{C4BE7C63-7885-4B53-9395-068588F762DC}.ExternalDebug|Any CPU.Build.0 = ExternalDebug|Any CPU
 		{C4BE7C63-7885-4B53-9395-068588F762DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4BE7C63-7885-4B53-9395-068588F762DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

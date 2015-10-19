@@ -116,9 +116,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AC_Math.cs" />
-    <Compile Include="AC_Settings.cs" />
-    <Compile Include="AC_Transations.cs" />
+    <Compile Include="autocad-arx\AC_Math.cs" />
+    <Compile Include="autocad-arx\AC_Settings.cs" />
+    <Compile Include="autocad-arx\AC_Transations.cs" />
     <Compile Include="DIMINC.cs" />
     <Compile Include="DIM_Settings.cs" />
     <Compile Include="DISPINFO.cs" />

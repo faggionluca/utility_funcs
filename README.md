@@ -71,4 +71,6 @@ for using these classes in your project you need to make sure to have the follow
 3. Add the reference path to the project
   * ObjectArxPath\inc\
   * ObjectArxPath\inc-x64\ or ObjectArxPath\inc-x32\ (**Depend on the platform**)
+4. In the files u want to use these classes add:
+  * ```c# using AutoCad_ARX; ```
 

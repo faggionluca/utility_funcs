@@ -6,7 +6,6 @@
 *.user
 *.userosscache
 *.sln.docstates
-pullSubtree.bat
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

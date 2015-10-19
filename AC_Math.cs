@@ -15,8 +15,6 @@ namespace Utility_funcs
     {
         public AC_Math()
         {
-
-
         }
 
         public double RetriveRot(Point3d point1, Point3d point2)

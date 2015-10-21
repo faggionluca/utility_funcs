@@ -1,15 +1,15 @@
 # autocad-arx
 managed classes for simplify (dot)net programming for autocad
-autocad-arx provides some classes and a intermediate class called **AC_Transaction**
+autocad-arx provides some classes and a intermediate class called **AC_Transactions**
 the concept behind this is a *write less do more* because the traditional way for (dot)net programming on autocad is very tedious
 with these classes you should also keep more organized the code
 
 Here a short example:
 
-**Using the AC_Transaction Class**
+**Using the AC_Transactions Class**
 ```c#
 //Init the class only do this one time
-AC_Transaction tr = new AC_Transaction();
+AC_Transactions tr = new AC_Transactions();
 Entity ent = tr.openObject(myid,OpenMode.ForRead) as Entity;
 ```
 
@@ -34,10 +34,10 @@ using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction()) {
 }
 ```
 
-**And if you want to have more control with AC_Transaction**
+**And if you want to have more control with AC_Transactions**
 ```c#
 //Init the class only do this one time
-AC_Transaction tr = new AC_Transaction();
+AC_Transactions tr = new AC_Transactions();
 // Start a transaction
 tr.start_Transaction();
 // Open the Block tables for read

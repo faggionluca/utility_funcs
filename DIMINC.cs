@@ -17,7 +17,7 @@ namespace Utility_funcs
 {
     public class IncrementalQuotes
     {
-        public class DimInc_Init : Autodesk.AutoCAD.Runtime.IExtensionApplication
+        public class DimInc_Init : IExtensionApplication
         {
             private DocumentCollection DocColl;
             private AC_Transactions tr;
@@ -165,13 +165,12 @@ namespace Utility_funcs
                 CurrPoint = tr.AC_Doc.Editor.GetPoint("Pick a Point");
                 Points.Add(CurrPoint.Value);
                 preview.update_PreviewLine(CurrPoint.Value, acMath.totalDistance(Points, DIMset.DimUnit_Precision));
-
                 if (CurrPoint.Status == PromptStatus.Cancel)
                 {
                     preview.endDraw_PreviewLine();
                     return false;
                 }
-
+                tr.AC_Doc.Editor.WriteMessage(CurrPoint.Value.ToString() + "\n");
                 return true;
             }
 
@@ -337,7 +336,7 @@ namespace Utility_funcs
                     ids = new ObjectId[1] { DimInc_pLine };
                     SetIdFilter(ids);
                     tr.AC_Doc.Editor.PointMonitor += Editor_PointMonitor;
-                    tr.AC_Doc.Editor.SelectionAdded +=Editor_SelectionAdded;
+                    tr.AC_Doc.Editor.SelectionAdded += Editor_SelectionAdded;
                     tr.AC_Doc.Editor.SelectionRemoved += Editor_SelectionRemoved;
                     Application.DocumentManager.DocumentDestroyed += DocumentManager_DocumentDestroyed;
                 }
@@ -354,52 +353,54 @@ namespace Utility_funcs
                     if (Gripindex != null || GripIndexs[0] != null && GripIndexs[1] != null)
                     {
                         Polyline pLine = tr.openObject(DimInc_pLine, OpenMode.ForWrite) as Polyline;
-                        Point3dCollection points = new Point3dCollection();
-                        for (int i = 0; i < pLine.NumberOfVertices; i++)
-                        {
-                            if (i == Gripindex)
+                        if (pLine != null) {
+                            Point3dCollection points = new Point3dCollection();
+                            for (int i = 0; i < pLine.NumberOfVertices; i++)
                             {
-                                points.Add(CurrPoint);
-                                continue;
-                            }
-                            else if (i == GripIndexs[0] || i == GripIndexs[1])
-                            {
-                                points.Add(acMath.getPointAtVector(pLine.GetPoint3dAt(i),offset));
-                                continue;
-                            }
-                            else
-                            {
-                                points.Add(pLine.GetPoint3dAt(i));
-                            }
-                        }
-                        tr.closeObject();
-
-                        Group Texts = tr.openGroup(DimInc_texts, OpenMode.ForWrite);
-                        ObjectId[] ids = Texts.GetAllEntityIds();
-                        tr.closeGroup();
-
-                        int index = 0;
-                        foreach (ObjectId id in ids)
-                        {
-
-                            DBText txt = tr.openObject(id, OpenMode.ForWrite) as DBText;
-                            if (index != points.Count - 1)
-                            {
-                                txt.TextString = acMath.totalDistance(points, DIMset.DimUnit_Precision, index).ToString();
-                                txt.Rotation = acMath.RetriveRot(points[index], points[index + 1]);
-                                txt.AlignmentPoint = acMath.pointOffset(points[index],points[index + 1],DIMset.Dimtxt_Offset)[1];
-                            }
-                            else
-                            {
-                                txt.TextString = acMath.totalDistance(points, DIMset.DimUnit_Precision, index).ToString();
-                                txt.Rotation = acMath.RetriveRot(points[index], points[0]);
-                                txt.AlignmentPoint = acMath.pointOffset(points[index], points[0], DIMset.Dimtxt_Offset)[1];
+                                if (i == Gripindex)
+                                {
+                                    points.Add(CurrPoint);
+                                    continue;
+                                }
+                                else if (i == GripIndexs[0] || i == GripIndexs[1])
+                                {
+                                    points.Add(acMath.getPointAtVector(pLine.GetPoint3dAt(i),offset));
+                                    continue;
+                                }
+                                else
+                                {
+                                    points.Add(pLine.GetPoint3dAt(i));
+                                }
                             }
                             tr.closeObject();
-                            index++;
-                        }
 
-                        needRefresh = true;
+                            Group Texts = tr.openGroup(DimInc_texts, OpenMode.ForWrite);
+                            ObjectId[] ids = Texts.GetAllEntityIds();
+                            tr.closeGroup();
+
+                            int index = 0;
+                            foreach (ObjectId id in ids)
+                            {
+
+                                DBText txt = tr.openObject(id, OpenMode.ForWrite) as DBText;
+                                if (index != points.Count - 1)
+                                {
+                                    txt.TextString = acMath.totalDistance(points, DIMset.DimUnit_Precision, index).ToString();
+                                    txt.Rotation = acMath.RetriveRot(points[index], points[index + 1]);
+                                    txt.AlignmentPoint = acMath.pointOffset(points[index],points[index + 1],DIMset.Dimtxt_Offset)[1];
+                                }
+                                else
+                                {
+                                    txt.TextString = acMath.totalDistance(points, DIMset.DimUnit_Precision, index).ToString();
+                                    txt.Rotation = acMath.RetriveRot(points[index], points[0]);
+                                    txt.AlignmentPoint = acMath.pointOffset(points[index], points[0], DIMset.Dimtxt_Offset)[1];
+                                }
+                                tr.closeObject();
+                                index++;
+                            }
+
+                            needRefresh = true;
+                        }
                     }
 
                 }
@@ -419,7 +420,7 @@ namespace Utility_funcs
                     CurrPoint = e.Context.ComputedPoint;
                 }
 
-                public void Editor_PromptedForPoint(object sender, PromptPointResultEventArgs e)
+                void Editor_PromptedForPoint(object sender, PromptPointResultEventArgs e)
                 {
                     if (!done)
                     {
@@ -429,8 +430,8 @@ namespace Utility_funcs
                         {
                             populateGripIndex(pLine);
                             populateGripIndexs(pLine);
+                            tr.closeObject();
                         }
-                        tr.closeObject();
                     }
                 }
 
@@ -514,8 +515,9 @@ namespace Utility_funcs
                     {
                         if (id == DimInc_pLine && needOverrule)
                         {
-                            tr.AC_Doc.Editor.PromptedForPoint -= this.Editor_PromptedForPoint;
-                            tr.AC_Doc.Editor.DraggingEnded -= this.Editor_DraggingEnded;
+                            tr.AC_Doc.Editor.PointMonitor -= Editor_PointMonitor;
+                            tr.AC_Doc.Editor.PromptedForPoint -= Editor_PromptedForPoint;
+                            tr.AC_Doc.Editor.DraggingEnded -= Editor_DraggingEnded;
                             ObjectOverrule.RemoveOverrule(RXClass.GetClass(typeof(Entity)), this);
                             needOverrule = true;
                         }
@@ -528,8 +530,10 @@ namespace Utility_funcs
                     {
                         if (id == DimInc_pLine && needOverrule)
                         {
-                            tr.AC_Doc.Editor.PromptedForPoint += this.Editor_PromptedForPoint;
-                            tr.AC_Doc.Editor.DraggingEnded += this.Editor_DraggingEnded;
+
+                            tr.AC_Doc.Editor.PointMonitor += Editor_PointMonitor;
+                            tr.AC_Doc.Editor.PromptedForPoint += Editor_PromptedForPoint;
+                            tr.AC_Doc.Editor.DraggingEnded += Editor_DraggingEnded;
                             ObjectOverrule.AddOverrule(RXClass.GetClass(typeof(Entity)), this, true);
                             needOverrule = false;
                         }

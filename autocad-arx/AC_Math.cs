@@ -9,7 +9,7 @@ using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.Geometry;
 
-namespace Utility_funcs
+namespace AutoCad_ARX
 {
     class AC_Math
     {

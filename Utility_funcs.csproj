@@ -116,6 +116,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="autocad-arx\ICurve.cs" />
+    <Compile Include="autocad-arx\AC_Line.cs" />
     <Compile Include="autocad-arx\AC_Math.cs" />
     <Compile Include="autocad-arx\AC_Settings.cs" />
     <Compile Include="autocad-arx\AC_Transations.cs" />

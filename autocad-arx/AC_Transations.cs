@@ -14,6 +14,7 @@ namespace AutoCad_ARX
         public Document AC_Doc { get; set; }
         public Database AC_Db { get; set; }
         public Transaction AC_Tr { get; set; }
+        public DocumentCollection AC_DocCol { get; set; }
 
         public BlockTable AC_blockTable { get; set; }
         public BlockTableRecord AC_blockTableRecord { get; set; }
@@ -22,13 +23,15 @@ namespace AutoCad_ARX
         public AC_Transactions(Document acDoc, Database acCurDb)
         {
             AC_Doc = acDoc;
-            AC_Db = acCurDb;     
+            AC_Db = acCurDb;
+            AC_DocCol = Application.DocumentManager;
         }
 
         public AC_Transactions()
         {
             AC_Doc = Application.DocumentManager.MdiActiveDocument;
             AC_Db = AC_Doc.Database;
+            AC_DocCol = Application.DocumentManager;
         }
 
         public Transaction start_Transaction()
@@ -88,6 +91,12 @@ namespace AutoCad_ARX
             return id;
         }
 
+        public ObjectId addAC_Line(AC_Line line)
+        {
+            ObjectId id = addObject(line);
+            line.ObjectId = id;
+            return id;
+        }
 
         /// <summary>
         /// <para>This Function let you open a object with the mode u specify.</para>
@@ -111,6 +120,28 @@ namespace AutoCad_ARX
             }
             Dispose();
             return null;
+        }
+
+        /// <summary>
+        /// <para>Let you open a object already disposed and erased only for read</para>
+        /// <para>Return:</para>
+        /// <para>Entity (if found an object)</para>
+        /// <para>null (if nothing found)</para>
+        /// </summary>
+        /// <param name="ObjId">object id for opening</param>
+        /// <returns></returns>
+        public Entity openObjectErased(ObjectId ObjId)
+        {
+            Entity ent = openObject(ObjId, OpenMode.ForRead) as Entity;
+            if (ent != null)
+            {
+                Dispose();
+                return ent;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void closeObject()

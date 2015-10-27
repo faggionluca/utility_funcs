@@ -43,7 +43,7 @@ namespace AutoCad_ARX
             this.line = new Line(pointer1, pointer2);
         }
 
-        public static new AC_Line fromOpenObject(Entity ent)
+        public static AC_Line fromOpenObject(Entity ent)
         {
             AC_Line line = new AC_Line(ent.UnmanagedObject, ent as Line);
             return line;

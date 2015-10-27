@@ -11,47 +11,22 @@ using Autodesk.AutoCAD.Geometry;
 
 namespace AutoCad_ARX
 {
-    public class AC_Curve : Curve
+    public class AC_Curve : AC_Entity
     {
-        public AC_Transactions tr;
-        public new ObjectId ObjectId { get; set; }
-        public Curve BaseCurve;
+        public Curve BaseCurve
+        {
+            get
+            {
+                return base.BaseEntity as Curve;
+            }
+            set
+            {
+                base.BaseEntity = value;
+            }
+        }
 
         public AC_Curve(IntPtr unmanagedObjPtr, bool autoDelete) : base(unmanagedObjPtr, autoDelete)
         {
-            tr = new AC_Transactions();
-        }
-
-        protected override void Dispose(bool A_1)
-        {
-            GC.SuppressFinalize(this);
-        }
-
-        public void createInstance()
-        {
-            tr.AC_Doc.LockDocument();
-            this.BaseCurve = tr.openObject(this.ObjectId, OpenMode.ForWrite) as Curve;
-        }
-
-        public bool isInstanced()
-        {
-            if (this.ObjectId != ObjectId.Null)
-            {
-                this.tr.AC_Doc.LockDocument();
-                this.BaseCurve = this.tr.openObject(base.ObjectId, OpenMode.ForWrite) as Line;
-                if (this.BaseCurve != null)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
         }
 
         public ObjectId addToDrawing()
@@ -61,7 +36,7 @@ namespace AutoCad_ARX
         }
 
         //CURVE PROPRIETIES
-        public new double Area
+        public double Area
         {
             get 
             {
@@ -71,7 +46,7 @@ namespace AutoCad_ARX
             } 
         }
 
-        public new bool Closed 
+        public bool Closed 
         {
             get
             {
@@ -81,7 +56,7 @@ namespace AutoCad_ARX
             } 
         }
 
-        public new double EndParam 
+        public double EndParam 
         {
             get
             {
@@ -91,7 +66,7 @@ namespace AutoCad_ARX
             } 
         }
 
-        public override Point3d EndPoint 
+        public Point3d EndPoint 
         {
             get
             {
@@ -107,7 +82,7 @@ namespace AutoCad_ARX
             }
         }
 
-        public new bool IsPeriodic 
+        public bool IsPeriodic 
         {
             get
             {
@@ -117,7 +92,7 @@ namespace AutoCad_ARX
             }
         }
 
-        public new Spline Spline 
+        public Spline Spline 
         {
             get
             {
@@ -127,7 +102,7 @@ namespace AutoCad_ARX
             }
         }
 
-        public new double StartParam 
+        public double StartParam 
         {
             get
             {
@@ -137,7 +112,7 @@ namespace AutoCad_ARX
             }
         }
 
-        public override Point3d StartPoint 
+        public Point3d StartPoint 
         {
             get
             {
@@ -153,21 +128,23 @@ namespace AutoCad_ARX
             }
         }
 
-        public override void Extend(double newParameter)
+
+        //METHODS
+        public virtual void Extend(double newParameter)
         {
             createInstance();
             BaseCurve.Extend(newParameter);
             tr.Dispose();
         }
 
-        public override void Extend(bool extendStart, Point3d toPoint)
+        public virtual void Extend(bool extendStart, Point3d toPoint)
         {
             createInstance();
             BaseCurve.Extend(extendStart, toPoint);
             tr.Dispose();
         }
 
-        public override Point3d GetClosestPointTo(Point3d givenPoint, bool extend)
+        public virtual Point3d GetClosestPointTo(Point3d givenPoint, bool extend)
         {
             createInstance();
             Point3d GetClosestPoint = BaseCurve.GetClosestPointTo(givenPoint, extend);
@@ -175,7 +152,7 @@ namespace AutoCad_ARX
             return GetClosestPoint;
         }
 
-        public override Point3d GetClosestPointTo(Point3d givenPoint, Vector3d direction, bool extend)
+        public virtual Point3d GetClosestPointTo(Point3d givenPoint, Vector3d direction, bool extend)
         {
             createInstance();
             Point3d GetClosestPoint = BaseCurve.GetClosestPointTo(givenPoint, direction, extend);
@@ -183,7 +160,7 @@ namespace AutoCad_ARX
             return GetClosestPoint;
         }
 
-        public override double GetDistanceAtParameter(double value)
+        public virtual double GetDistanceAtParameter(double value)
         {
             createInstance();
             double GetDistanceAtPar = BaseCurve.GetDistanceAtParameter(value);
@@ -191,7 +168,7 @@ namespace AutoCad_ARX
             return GetDistanceAtPar;
         }
 
-        public override double GetDistAtPoint(Point3d point)
+        public virtual double GetDistAtPoint(Point3d point)
         {
             createInstance();
             double DistAtPoint = BaseCurve.GetDistAtPoint(point);
@@ -199,7 +176,7 @@ namespace AutoCad_ARX
             return DistAtPoint;
         }
 
-        public override Vector3d GetFirstDerivative(double value)
+        public virtual Vector3d GetFirstDerivative(double value)
         {
             createInstance();
             Vector3d GetFirstDer = BaseCurve.GetFirstDerivative(value);
@@ -207,7 +184,7 @@ namespace AutoCad_ARX
             return GetFirstDer;
         }
 
-        public override Vector3d GetFirstDerivative(Point3d point)
+        public virtual Vector3d GetFirstDerivative(Point3d point)
         {
             createInstance();
             Vector3d GetFirstDer = BaseCurve.GetFirstDerivative(point);
@@ -215,7 +192,7 @@ namespace AutoCad_ARX
             return GetFirstDer;
         }
 
-        public new Curve3d GetGeCurve()
+        public Curve3d GetGeCurve()
         {
             createInstance();
             Curve3d GetGeCur = BaseCurve.GetGeCurve();
@@ -223,7 +200,7 @@ namespace AutoCad_ARX
             return GetGeCur;
         }
 
-        public new Curve3d GetGeCurve(Tolerance tolerance)
+        public Curve3d GetGeCurve(Tolerance tolerance)
         {
             createInstance();
             Curve3d GetGeCur = BaseCurve.GetGeCurve(tolerance);
@@ -231,7 +208,7 @@ namespace AutoCad_ARX
             return GetGeCur;
         }
 
-        public override DBObjectCollection GetOffsetCurves(double offsetDist)
+        public virtual DBObjectCollection GetOffsetCurves(double offsetDist)
         {
             createInstance();
             DBObjectCollection GetOffset = BaseCurve.GetOffsetCurves(offsetDist);
@@ -239,7 +216,7 @@ namespace AutoCad_ARX
             return GetOffset;
         }
 
-        public override DBObjectCollection GetOffsetCurvesGivenPlaneNormal(Vector3d normal, double offsetDist)
+        public virtual DBObjectCollection GetOffsetCurvesGivenPlaneNormal(Vector3d normal, double offsetDist)
         {
             createInstance();
             DBObjectCollection GetOffset = BaseCurve.GetOffsetCurvesGivenPlaneNormal(normal,offsetDist);
@@ -247,7 +224,121 @@ namespace AutoCad_ARX
             return GetOffset;
         }
 
+        public virtual Curve GetOrthoProjectedCurve(Plane planeToProjectOn)
+        {
+            createInstance();
+            Curve GetOrthoProj = BaseCurve.GetOrthoProjectedCurve(planeToProjectOn);
+            tr.Dispose();
+            return GetOrthoProj;
+        }
 
+        public virtual double GetParameterAtDistance(double dist)
+        {
+            createInstance();
+            double GetParameterAtDist = BaseCurve.GetParameterAtDistance(dist);
+            tr.Dispose();
+            return GetParameterAtDist;
+        }
+
+        public virtual double GetParameterAtPoint(Point3d point)
+        {
+            createInstance();
+            double GetParameterAtP = BaseCurve.GetParameterAtPoint(point);
+            tr.Dispose();
+            return GetParameterAtP;
+        }
+
+        public virtual Point3d GetPointAtDist(double value)
+        {
+            createInstance();
+            Point3d GetPointAtD = BaseCurve.GetPointAtDist(value);
+            tr.Dispose();
+            return GetPointAtD;
+        }
+
+        public virtual Point3d GetPointAtParameter(double value)
+        {
+            createInstance();
+            Point3d GetPointAtPar = BaseCurve.GetPointAtParameter(value);
+            tr.Dispose();
+            return GetPointAtPar;
+        }
+
+        public virtual Curve GetProjectedCurve(Plane planeToProjectOn, Vector3d projectionDirection)
+        {
+            createInstance();
+            Curve GetProjectedC = BaseCurve.GetProjectedCurve(planeToProjectOn, projectionDirection);
+            tr.Dispose();
+            return GetProjectedC;
+        }
+
+        public virtual Vector3d GetSecondDerivative(double value)
+        {
+            createInstance();
+            Vector3d GetSecondDer = BaseCurve.GetSecondDerivative(value);
+            tr.Dispose();
+            return GetSecondDer;
+        }
+
+        public virtual Vector3d GetSecondDerivative(Point3d point)
+        {
+            createInstance();
+            Vector3d GetSecondDer = BaseCurve.GetSecondDerivative(point);
+            tr.Dispose();
+            return GetSecondDer;
+        }
+
+        public virtual DBObjectCollection GetSplitCurves(DoubleCollection value)
+        {
+            createInstance();
+            DBObjectCollection GetSplitC = BaseCurve.GetSplitCurves(value);
+            tr.Dispose();
+            return GetSplitC;
+
+        }
+
+        public virtual DBObjectCollection GetSplitCurves(Point3dCollection points)
+        {
+            createInstance();
+            DBObjectCollection GetSplitC = BaseCurve.GetSplitCurves(points);
+            tr.Dispose();
+            return GetSplitC;
+        }
+
+        public virtual void ReverseCurve()
+        {
+            createInstance();
+            BaseCurve.ReverseCurve();
+            tr.Dispose();
+        }
+
+        public void SetFromGeCurve(Curve3d geCurve)
+        {
+            createInstance();
+            BaseCurve.SetFromGeCurve(geCurve);
+            tr.Dispose();
+        }
+
+        public void SetFromGeCurve(Curve3d geCurve, Tolerance tolerance)
+        {
+            createInstance();
+            BaseCurve.SetFromGeCurve(geCurve, tolerance);
+            tr.Dispose();
+        }
+
+        public void SetFromGeCurve(Curve3d geCurve, Vector3d __unnamed001)
+        {
+            createInstance();
+            BaseCurve.SetFromGeCurve(geCurve, __unnamed001);
+            tr.Dispose();
+        }
+
+        public void SetFromGeCurve(Curve3d geCurve, Vector3d __unnamed001, Tolerance tolerance)
+        {
+            createInstance();
+            BaseCurve.SetFromGeCurve(geCurve, __unnamed001, tolerance);
+            tr.Dispose();
+        }
 
     }
 

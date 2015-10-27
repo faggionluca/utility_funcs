@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
@@ -11,220 +12,152 @@ using Autodesk.AutoCAD.Geometry;
 
 namespace AutoCad_ARX
 {
-    public class AC_Line : Line,ICurve
+    public class AC_Line : AC_Curve
     {
-        private AC_Transactions tr;
-        private AC_Curve ac_curve;
-
-        private Line line;
-        public Line subLine
+        public Line line
         {
             get
             {
-                return line;
-            }
-        }
-
-        private ObjectId id;
-        public new ObjectId ObjectId
-        {
-            get
-            {
-                return this.id;
+                return base.BaseCurve as Line;
             }
             set
             {
-                this.id = value;
-                ac_curve.ObjectId = value;
+                base.BaseCurve = value;
             }
         }
 
-        public AC_Line() : base()
+        public AC_Line() : base(Marshal.StringToHGlobalUni(Guid.NewGuid().ToString()), true)
         {
-            tr = new AC_Transactions();
-            ac_curve = new AC_Curve(this.UnmanagedObject, this.AutoDelete);
-            ac_curve.ObjectId = this.ObjectId;
-            line = null;
+            this.line = new Line();
         }
 
-        public AC_Line(Line inLine)
+        public AC_Line(IntPtr ptrLine,Line inLine) : base(ptrLine, true)
         {
-            tr = new AC_Transactions();
-            ac_curve = new AC_Curve(inLine.UnmanagedObject, inLine.AutoDelete);
-            ac_curve.ObjectId = inLine.ObjectId;
-            this.id = inLine.ObjectId;
-            line = inLine;
+
+            base.ObjectId = inLine.ObjectId;
+            this.line = inLine;
         }
 
-        public AC_Line(Point3d pointer1, Point3d pointer2) : base(pointer1, pointer2)
+        public AC_Line(Point3d pointer1, Point3d pointer2): base(Marshal.StringToHGlobalUni(Guid.NewGuid().ToString()), true)
         {
-            tr = new AC_Transactions();
-            ac_curve = new AC_Curve(this.UnmanagedObject, this.AutoDelete);
-            ac_curve.ObjectId = this.ObjectId;
-            line = null;
+            this.line = new Line(pointer1, pointer2);
         }
 
-        public static AC_Line fromOpenObject(Entity ent)
+        public static new AC_Line fromOpenObject(Entity ent)
         {
-            AC_Line line = new AC_Line(ent as Line);
+            AC_Line line = new AC_Line(ent.UnmanagedObject, ent as Line);
             return line;
         }
 
-        public bool isInstanced()
-        {
-            tr.AC_Doc.LockDocument();
-            this.line = tr.openObject(this.id, OpenMode.ForWrite) as Line;
-            if (this.line != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-
         //PROPRIETIES LINE//////////////////
 
-        public new double Angle 
+        public double Angle 
         {
             get
             {
-                if (isInstanced())
+                if (base.isInstanced())
                 {
                     tr.Dispose();
                     return line.Angle;
                 }
                 else
                 {
-                    return base.Angle;
+                    return line.Angle;
                 }
             }
         }
 
-        public new Vector3d Delta 
+        public Vector3d Delta 
         {
             get
             {
-                if (isInstanced())
+                if (base.isInstanced())
                 {
                     tr.Dispose();
                     return line.Delta;
                 }
                 else
                 {
-                    return base.Delta;
+                    return line.Delta;
                 }
             }
         }
 
-        public new double Length
+        public double Length
         {
             get
             {
-                if (isInstanced())
+                if (base.isInstanced())
                 {
                     tr.Dispose();
                     return line.Length;
                 }
                 else
                 {
-                    return base.Length;
+                    return line.Length;
                 }
             }
         }
 
-        public new Vector3d Normal
+        public Vector3d Normal
         {
             get
             {
-                if (isInstanced())
+                if (base.isInstanced())
                 {
                     tr.Dispose();
                     return line.Normal;
                 }
                 else
                 {
-                    return base.Normal;
+                    return line.Normal;
                 }
             }
             set
             {
-                if (isInstanced())
+                if (base.isInstanced())
                 {
                     line.Normal = value;
                     tr.Dispose();
                 }
                 else
                 {
-                    base.Normal = value;
+                    line.Normal = value;
                 }
             }
         }
 
-        public new double Thickness
+        public double Thickness
         {
             get
             {
-                if (isInstanced())
+                if (base.isInstanced())
                 {
                     tr.Dispose();
                     return line.Thickness;
                 }
                 else
                 {
-                    return base.Thickness;
+                    return line.Thickness;
                 }
             }
             set
             {
-                if (isInstanced())
+                if (base.isInstanced())
                 {
                     line.Thickness = value;
                     tr.Dispose();
                 }
                 else
                 {
-                    base.Thickness = value;
+                    line.Thickness = value;
                 }
             }
         }
 
-        //PROPRIETIES CURVE//////////////////
-        public override Point3d StartPoint
+        static public explicit operator Line(AC_Line ln)
         {
-            get
-            {
-                return ac_curve.StartPoint;
-            }
-            set
-            {
-                ac_curve.StartPoint = value;
-            }
-        }
-        public new Point3d EndPoint 
-        {
-            get
-            {
-                return ac_curve.EndPoint;
-            }
-            set
-            {
-                ac_curve.EndPoint = value;
-            }
-        }
-        public new double Area { get { return ac_curve.Area; } }
-        public new bool Closed { get { return ac_curve.Closed; } }
-        public new double EndParam { get { return ac_curve.EndParam; } }
-        public new bool IsPeriodic { get { return ac_curve.IsPeriodic; } }
-        public new Spline Spline { get { return ac_curve.Spline; } }
-        public new double StartParam { get { return ac_curve.StartParam; } }
-
-        //METHODS CURVE//////////////////////
-        public new double GetDistAtPoint(Point3d point)
-        {
-            return ac_curve.GetDistAtPoint(point);
+            return ln.line;
         }
     }
 }

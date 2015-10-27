@@ -91,13 +91,6 @@ namespace AutoCad_ARX
             return id;
         }
 
-        public ObjectId addAC_Line(AC_Line line)
-        {
-            ObjectId id = addObject(line);
-            line.ObjectId = id;
-            return id;
-        }
-
         /// <summary>
         /// <para>This Function let you open a object with the mode u specify.</para>
         /// <para>Return:</para><para> Null (if nothing was found)</para> <para>Entity (if there is a successful found)</para>

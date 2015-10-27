@@ -23,20 +23,17 @@ namespace Utility_funcs
             ln.Thickness = 10;
             ObjectId id1 = ln.ObjectId;
             tr = new AC_Transactions();
-            ObjectId id = tr.addAC_Line(ln);
-
-            tr.AC_Doc.Editor.PointMonitor +=Editor_PointMonitor;
-            //ln.EndPoint = new Point3d(0,0,0);
-
-            AC_Line ln2 = AC_Line.fromOpenObject((Line)tr.openObjectErased(id));
-            //////ObjectId id2 = ln2.ObjectId;
-            double test = ln2.Thickness;
+            ObjectId id = ln.addToDrawing();
+            //ObjectId id = tr.addObject(ln.toLine());
+            id1 = ln.ObjectId;
+            tr.AC_Doc.Editor.PointMonitor += Editor_PointMonitor;
         }
 
         private void Editor_PointMonitor(object sender, PointMonitorEventArgs e)
         {
             ln.EndPoint = e.Context.ComputedPoint;
-            tr.AC_Doc.Editor.WriteMessage("\n" + ln.GetDistAtPoint(e.Context.ComputedPoint).ToString());
+            //ln.Extend(20);
+            tr.AC_Doc.Editor.WriteMessage("\n" + ln.Area.ToString());
         }
 
     }

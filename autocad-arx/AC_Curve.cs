@@ -13,7 +13,7 @@ namespace AutoCad_ARX
 {
     public class AC_Curve : AC_Entity
     {
-        public Curve BaseCurve
+        protected internal Curve BaseCurve
         {
             get
             {
@@ -25,15 +25,7 @@ namespace AutoCad_ARX
             }
         }
 
-        public AC_Curve(IntPtr unmanagedObjPtr, bool autoDelete) : base(unmanagedObjPtr, autoDelete)
-        {
-        }
-
-        public ObjectId addToDrawing()
-        {
-            this.ObjectId = tr.addObject(BaseCurve);
-            return this.ObjectId;
-        }
+        public AC_Curve(IntPtr unmanagedObjPtr, bool autoDelete) : base(unmanagedObjPtr, autoDelete) { }
 
         //CURVE PROPRIETIES
         public double Area

@@ -14,7 +14,7 @@ namespace AutoCad_ARX
 {
     public class AC_Line : AC_Curve
     {
-        public Line line
+        protected internal Line line
         {
             get
             {
@@ -26,19 +26,22 @@ namespace AutoCad_ARX
             }
         }
 
-        public AC_Line() : base(Marshal.StringToHGlobalUni(Guid.NewGuid().ToString()), true)
+        public AC_Line() 
+            : base(Marshal.StringToHGlobalUni(Guid.NewGuid().ToString()), true)
         {
             this.line = new Line();
         }
 
-        public AC_Line(IntPtr ptrLine,Line inLine) : base(ptrLine, true)
+        public AC_Line(IntPtr ptrLine, Line inLine)
+            : base(Marshal.StringToHGlobalUni(Guid.NewGuid().ToString()), true)
         {
 
             base.ObjectId = inLine.ObjectId;
             this.line = inLine;
         }
 
-        public AC_Line(Point3d pointer1, Point3d pointer2): base(Marshal.StringToHGlobalUni(Guid.NewGuid().ToString()), true)
+        public AC_Line(Point3d pointer1, Point3d pointer2)
+            : base(Marshal.StringToHGlobalUni(Guid.NewGuid().ToString()), true)
         {
             this.line = new Line(pointer1, pointer2);
         }
@@ -153,11 +156,6 @@ namespace AutoCad_ARX
                     line.Thickness = value;
                 }
             }
-        }
-
-        static public explicit operator Line(AC_Line ln)
-        {
-            return ln.line;
         }
     }
 }

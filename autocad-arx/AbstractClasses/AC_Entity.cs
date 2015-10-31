@@ -14,7 +14,7 @@ using Autodesk.AutoCAD.GraphicsInterface;
 
 namespace AutoCad_ARX
 {
-    public class AC_Entity : AC_DBObject
+    public abstract class AC_Entity : AC_DBObject
     {
         protected internal Entity BaseEntity
         {
@@ -28,9 +28,7 @@ namespace AutoCad_ARX
             }
         }
 
-        protected internal AC_Entity(IntPtr unmanagedObjPtr, bool autoDelete) : base(unmanagedObjPtr,autoDelete)
-        {
-        }
+        protected internal AC_Entity() : base() { }
 
         //PROPRIETIES
         [Category("Misc")]
@@ -521,7 +519,7 @@ namespace AutoCad_ARX
             BaseEntity.Explode(entitySet);
             tr.Dispose();
         }
-        public  IntPtrCollection GetGraphicsMarkersAtSubentityPathIntPtr(FullSubentityPath subPath)
+        public IntPtrCollection GetGraphicsMarkersAtSubentityPathIntPtr(FullSubentityPath subPath)
         {
             createInstance();
             IntPtrCollection GetGraphicsMarkers = BaseEntity.GetGraphicsMarkersAtSubentityPathIntPtr(subPath);

@@ -11,7 +11,7 @@ using Autodesk.AutoCAD.Geometry;
 
 namespace AutoCad_ARX
 {
-    public class AC_Curve : AC_Entity
+    public abstract class AC_Curve : AC_Entity
     {
         protected internal Curve BaseCurve
         {
@@ -25,7 +25,7 @@ namespace AutoCad_ARX
             }
         }
 
-        public AC_Curve(IntPtr unmanagedObjPtr, bool autoDelete) : base(unmanagedObjPtr, autoDelete) { }
+        public AC_Curve() : base() { }
 
         //CURVE PROPRIETIES
         public double Area

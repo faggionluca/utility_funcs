@@ -15,64 +15,26 @@ using Autodesk.AutoCAD.GraphicsInterface;
 
 namespace AutoCad_ARX
 {
-    public class AC_DBObject : DBObject
+    public abstract class AC_DBObject : AC_Drawable
     {
-        [Category("Misc")]
-        public new ObjectId ObjectId
+        protected internal DBObject BaseDBObject
         {
-            get;
-            protected internal set;
-        }
-        public AC_Transactions tr;
-        protected internal DBObject BaseDBObject;
-
-        protected internal AC_DBObject(IntPtr unmanagedObjPtr, bool autoDelete)
-            : base(unmanagedObjPtr, autoDelete)
-        {
-            tr = new AC_Transactions();
-        }
-
-        public void createInstance()
-        {
-            tr.AC_Doc.LockDocument();
-            this.BaseDBObject = tr.openObject(this.ObjectId, OpenMode.ForWrite) as DBObject;
-            if (this.BaseDBObject == null)
+            get
             {
-                throw new System.InvalidOperationException("You cannot modify the object because it is Erased");
+                return base.BaseDrawable as DBObject;
+            }
+            set
+            {
+                base.BaseDrawable = value;
             }
         }
 
-        public bool isInstanced()
-        {
-            if (this.ObjectId != ObjectId.Null)
-            {
-                this.tr.AC_Doc.LockDocument();
-                this.BaseDBObject = this.tr.openObject(this.ObjectId, OpenMode.ForWrite) as DBObject;
-                if (this.BaseDBObject != null)
-                {
-                    return true;
-                }
-                else
-                {
-                    tr.Dispose();
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
+        protected internal AC_DBObject() : base() { }
 
         public ObjectId addToDrawing()
         {
             this.ObjectId = tr.addObject(BaseDBObject as Entity);
-            return this.ObjectId;
-        }
-
-        protected override void Dispose(bool A_1)
-        {
-            GC.SuppressFinalize(this);
+            return base.ObjectId;
         }
 
         //PROPRIETIES
@@ -697,10 +659,6 @@ namespace AutoCad_ARX
             BaseDBObject.SetPaperOrientation(bPaperOrientation);
             tr.Dispose();
         }
-        //protected internal override int SubSetAttributes(DrawableTraits traits);
-        //protected internal override void SubViewportDraw(ViewportDraw vd);
-        //protected internal override int SubViewportDrawLogicalFlags(ViewportDraw vd);
-        //protected internal override bool SubWorldDraw(WorldDraw wd);
         public bool SupportsCollection(string collectionName)
         {
             createInstance();
@@ -838,33 +796,6 @@ namespace AutoCad_ARX
         void BaseDBObject_Unappended(object sender, EventArgs e)
         {
             Unappended(sender, e);
-        }
-
-
-        //CAST TYPE CONVERSIONS
-
-        static public explicit operator Line(AC_DBObject ent)
-        {
-            AC_Transactions tr = new AC_Transactions();
-            Line ln = tr.openObject(ent.ObjectId, OpenMode.ForWrite) as Line;
-            tr.closeObject();
-            return ln;
-        }
-
-        static public explicit operator Curve(AC_DBObject ent)
-        {
-            AC_Transactions tr = new AC_Transactions();
-            Curve ln = tr.openObject(ent.ObjectId, OpenMode.ForWrite) as Curve;
-            tr.closeObject();
-            return ln;
-        }
-
-        static public explicit operator Entity(AC_DBObject ent)
-        {
-            AC_Transactions tr = new AC_Transactions();
-            Entity ln = tr.openObject(ent.ObjectId, OpenMode.ForWrite) as Entity;
-            tr.closeObject();
-            return ln;
         }
     }
 }

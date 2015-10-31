@@ -27,13 +27,15 @@ namespace Utility_funcs
             ln.Thickness = 10;
             ObjectId id = ln.addToDrawing();
 
-            AC_Curve line1 = (AC_Curve)ln;
+            DBObject line1 = (DBObject)ln;
         }
 
         [CommandMethod("DISPINFO_1")]
         public void DispInformations1()
         {
-            ln.Erase(true);
+            Line line = new Line(new Point3d(20, 0, 0), new Point3d(10, 10, 0));
+            AC_Line ln = (AC_Line)line;
+            ln.addToDrawing();
         }
 
         [CommandMethod("DISPINFO_2")]

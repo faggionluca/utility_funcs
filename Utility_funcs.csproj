@@ -118,9 +118,13 @@
   <ItemGroup>
     <Compile Include="autocad-arx\AC_Curve.cs" />
     <Compile Include="autocad-arx\AC_DBObject.cs" />
+    <Compile Include="autocad-arx\AC_DisposableWrapper.cs" />
+    <Compile Include="autocad-arx\AC_Drawable.cs" />
     <Compile Include="autocad-arx\AC_Entity.cs" />
     <Compile Include="autocad-arx\AC_Line.cs" />
+    <Compile Include="autocad-arx\AC_MarshalByRefObject.cs" />
     <Compile Include="autocad-arx\AC_Math.cs" />
+    <Compile Include="autocad-arx\AC_RXObject.cs" />
     <Compile Include="autocad-arx\AC_Settings.cs" />
     <Compile Include="autocad-arx\AC_Transations.cs" />
     <Compile Include="DIMINC.cs" />

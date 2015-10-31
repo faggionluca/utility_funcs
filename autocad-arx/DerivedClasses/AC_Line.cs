@@ -26,29 +26,20 @@ namespace AutoCad_ARX
             }
         }
 
-        public AC_Line() 
-            : base(Marshal.StringToHGlobalUni(Guid.NewGuid().ToString()), true)
+        public AC_Line() : base()
         {
             this.line = new Line();
         }
 
-        public AC_Line(IntPtr ptrLine, Line inLine)
-            : base(Marshal.StringToHGlobalUni(Guid.NewGuid().ToString()), true)
-        {
-            base.ObjectId = inLine.ObjectId;
-            this.line = inLine;
-        }
-
-        public AC_Line(Point3d pointer1, Point3d pointer2)
-            : base(Marshal.StringToHGlobalUni(Guid.NewGuid().ToString()), true)
+        public AC_Line(Point3d pointer1, Point3d pointer2) : base()
         {
             this.line = new Line(pointer1, pointer2);
         }
 
-        public static AC_Line fromOpenObject(Entity ent)
+        public AC_Line(Line inLine) : base()
         {
-            AC_Line line = new AC_Line(ent.UnmanagedObject, ent as Line);
-            return line;
+            base.ObjectId = inLine.ObjectId;
+            this.line = inLine;
         }
 
         //PROPRIETIES LINE//////////////////
@@ -155,6 +146,13 @@ namespace AutoCad_ARX
                     line.Thickness = value;
                 }
             }
+        }
+
+        public static explicit operator AC_Line(Line line)
+        {
+            AC_Transactions tr = new AC_Transactions();
+            AC_Line ln = new AC_Line(line);
+            return ln;
         }
     }
 }

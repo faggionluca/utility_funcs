@@ -21,34 +21,25 @@ namespace Utility_funcs
         public void DispInformations()
         {
             i = 0;
-            ln = new AC_Line(new Point3d(0, 10, 0), new Point3d(10, 10, 0));
-            ln.Thickness = 10;
-            ObjectId id1 = ln.ObjectId;
             tr = new AC_Transactions();
+
+            ln = new AC_Line(new Point3d(0, 0, 0), new Point3d(10, 10, 0));
+            ln.Thickness = 10;
             ObjectId id = ln.addToDrawing();
-            //ObjectId id = tr.addObject(ln.toLine());
-            id1 = ln.ObjectId;
 
-            Line line1 = (Line)ln;
-            tr.AC_Doc.Editor.PointMonitor += Editor_PointMonitor;
+            AC_Curve line1 = (AC_Curve)ln;
         }
 
-        private void Editor_PointMonitor(object sender, PointMonitorEventArgs e)
+        [CommandMethod("DISPINFO_1")]
+        public void DispInformations1()
         {
-            ln.EndPoint = e.Context.ComputedPoint;
-            ln.Extend(20+i);
-            if (i < 500)
-            {
-                ln.Visible = false;
-            }
-            else
-            {
-                ln.Visible = true;
-
-            }
-            //tr.AC_Doc.Editor.WriteMessage("\n" + ln.BlockName.ToString());
-            i++;
+            ln.Erase(true);
         }
 
+        [CommandMethod("DISPINFO_2")]
+        public void DispInformations2()
+        {
+            ln.EndPoint = new Point3d(0,100,0);
+        }
     }
 }

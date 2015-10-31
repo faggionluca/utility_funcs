@@ -35,7 +35,6 @@ namespace AutoCad_ARX
         public AC_Line(IntPtr ptrLine, Line inLine)
             : base(Marshal.StringToHGlobalUni(Guid.NewGuid().ToString()), true)
         {
-
             base.ObjectId = inLine.ObjectId;
             this.line = inLine;
         }

@@ -14,62 +14,27 @@ using Autodesk.AutoCAD.GraphicsInterface;
 
 namespace AutoCad_ARX
 {
-    public class AC_Entity : Entity
+    public class AC_Entity : AC_DBObject
     {
-        public new ObjectId ObjectId
+        protected internal Entity BaseEntity
         {
-            get;
-            protected internal set;
+            get
+            {
+                return base.BaseDBObject as Entity;
+            }
+            set
+            {
+                base.BaseDBObject = value;
+            }
         }
-        public AC_Transactions tr;
-        protected internal Entity BaseEntity;
 
         protected internal AC_Entity(IntPtr unmanagedObjPtr, bool autoDelete) : base(unmanagedObjPtr,autoDelete)
         {
-            tr = new AC_Transactions();
-        }
-
-        protected override void Dispose(bool A_1)
-        {
-            GC.SuppressFinalize(this);
-        }
-
-        public void createInstance()
-        {
-            tr.AC_Doc.LockDocument();
-            this.BaseEntity = tr.openObject(this.ObjectId, OpenMode.ForWrite) as Entity;
-        }
-
-        public bool isInstanced()
-        {
-            if (this.ObjectId != ObjectId.Null)
-            {
-                this.tr.AC_Doc.LockDocument();
-                this.BaseEntity = this.tr.openObject(base.ObjectId, OpenMode.ForWrite) as Line;
-                if (this.BaseEntity != null)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public ObjectId addToDrawing()
-        {
-            this.ObjectId = tr.addObject(BaseEntity);
-            return this.ObjectId;
         }
 
         //PROPRIETIES
         [Category("Misc")]
-        public new ObjectId BlockId 
+        public ObjectId BlockId 
         {
             get
             {
@@ -79,7 +44,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("Misc")]
-        public new string BlockName 
+        public string BlockName 
         {
             get
             {
@@ -89,7 +54,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("3D Visualization")]
-        public new virtual bool CastShadows 
+        public virtual bool CastShadows 
         {
             get
             {
@@ -104,7 +69,7 @@ namespace AutoCad_ARX
                 tr.Dispose();
             }
         }
-        public new virtual bool CloneMeForDragging 
+        public virtual bool CloneMeForDragging 
         {
             get
             {
@@ -114,7 +79,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("Geometry")]
-        public new virtual CollisionType CollisionType 
+        public virtual CollisionType CollisionType 
         {
             get
             {
@@ -124,7 +89,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual Color Color
+        public virtual Color Color
         {
             get
             {
@@ -140,7 +105,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual int ColorIndex
+        public virtual int ColorIndex
         {
             get
             {
@@ -156,16 +121,17 @@ namespace AutoCad_ARX
             }
         }
         [Category("Geometry")]
-        public new virtual Matrix3d CompoundObjectTransform
+        public virtual Matrix3d CompoundObjectTransform
         {
             get
             {
                 createInstance();
+                Matrix3d comp = BaseEntity.CompoundObjectTransform;
                 tr.Dispose();
-                return BaseEntity.CompoundObjectTransform;
+                return comp;
             }
         }
-        public new virtual Matrix3d Ecs
+        public virtual Matrix3d Ecs
         {
             get
             {
@@ -175,7 +141,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("3D Visualization")]
-        public new ObjectId EdgeStyleId
+        public ObjectId EdgeStyleId
         {
             get
             {
@@ -191,7 +157,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new EntityColor EntityColor
+        public EntityColor EntityColor
         {
             get
             {
@@ -201,7 +167,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("3D Visualization")]
-        public new ObjectId FaceStyleId
+        public ObjectId FaceStyleId
         {
             get
             {
@@ -216,7 +182,7 @@ namespace AutoCad_ARX
                 tr.Dispose();
             }
         }
-        public new virtual bool ForceAnnoAllVisible
+        public virtual bool ForceAnnoAllVisible
         {
             get
             {
@@ -232,7 +198,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("Geometry")]
-        public new virtual Extents3d GeometricExtents
+        public virtual Extents3d GeometricExtents
         {
             get
             {
@@ -242,7 +208,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new HyperLinkCollection Hyperlinks
+        public HyperLinkCollection Hyperlinks
         {
             get
             {
@@ -252,7 +218,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("Geometry")]
-        public new virtual bool IsPlanar
+        public virtual bool IsPlanar
         {
             get
             {
@@ -262,7 +228,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual string Layer
+        public virtual string Layer
         {
             get
             {
@@ -278,7 +244,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual ObjectId LayerId
+        public virtual ObjectId LayerId
         {
             get
             {
@@ -294,7 +260,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual string Linetype
+        public virtual string Linetype
         {
             get
             {
@@ -310,7 +276,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual ObjectId LinetypeId
+        public virtual ObjectId LinetypeId
         {
             get
             {
@@ -326,7 +292,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual double LinetypeScale
+        public virtual double LinetypeScale
         {
             get
             {
@@ -342,7 +308,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual LineWeight LineWeight
+        public virtual LineWeight LineWeight
         {
             get
             {
@@ -358,7 +324,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("3D Visualization")]
-        public new string Material
+        public string Material
         {
             get
             {
@@ -374,7 +340,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("3D Visualization")]
-        public new ObjectId MaterialId
+        public ObjectId MaterialId
         {
             get
             {
@@ -390,7 +356,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("3D Visualization")]
-        public new Mapper MaterialMapper
+        public Mapper MaterialMapper
         {
             get
             {
@@ -406,7 +372,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual string PlotStyleName
+        public virtual string PlotStyleName
         {
             get
             {
@@ -422,7 +388,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual PlotStyleDescriptor PlotStyleNameId
+        public  virtual PlotStyleDescriptor PlotStyleNameId
         {
             get
             {
@@ -438,7 +404,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("3D Visualization")]
-        public new virtual bool ReceiveShadows
+        public virtual bool ReceiveShadows
         {
             get
             {
@@ -454,7 +420,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual Transparency Transparency
+        public virtual Transparency Transparency
         {
             get
             {
@@ -470,7 +436,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("General")]
-        public new virtual bool Visible
+        public virtual bool Visible
         {
             get
             {
@@ -486,7 +452,7 @@ namespace AutoCad_ARX
             }
         }
         [Category("3D Visualization")]
-        public new ObjectId VisualStyleId
+        public ObjectId VisualStyleId
         {
             get
             {
@@ -504,124 +470,124 @@ namespace AutoCad_ARX
 
         //METHODS
 
-        public new void AddSubentityPaths(FullSubentityPath[] subPaths)
+        public void AddSubentityPaths(FullSubentityPath[] subPaths)
         {
             createInstance();
             BaseEntity.AddSubentityPaths(subPaths);
             tr.Dispose();
         }
-        public new void BoundingBoxIntersectWith(Entity entityPointer, Intersect intersectType, Point3dCollection points, IntPtr thisGraphicSystemMarker, IntPtr otherGraphicSystemMarker)
+        public void BoundingBoxIntersectWith(Entity entityPointer, Intersect intersectType, Point3dCollection points, IntPtr thisGraphicSystemMarker, IntPtr otherGraphicSystemMarker)
         {
             createInstance();
             BaseEntity.BoundingBoxIntersectWith(entityPointer, intersectType,points,thisGraphicSystemMarker,otherGraphicSystemMarker);
             tr.Dispose();
         }
         [Obsolete("Use the overload taking IntPtr instead.")]
-        public new void BoundingBoxIntersectWith(Entity entityPointer, Intersect intersectType, Point3dCollection points, long thisGraphicSystemMarker, long otherGraphicSystemMarker)
+        public void BoundingBoxIntersectWith(Entity entityPointer, Intersect intersectType, Point3dCollection points, long thisGraphicSystemMarker, long otherGraphicSystemMarker)
         {
             createInstance();
             BaseEntity.BoundingBoxIntersectWith(entityPointer, intersectType, points, thisGraphicSystemMarker, otherGraphicSystemMarker);
             tr.Dispose();
         }
-        public new void BoundingBoxIntersectWith(Entity entityPointer, Intersect intersectType, Plane projectionPlane, Point3dCollection points, IntPtr thisGraphicSystemMarker, IntPtr otherGraphicSystemMarker)
+        public void BoundingBoxIntersectWith(Entity entityPointer, Intersect intersectType, Plane projectionPlane, Point3dCollection points, IntPtr thisGraphicSystemMarker, IntPtr otherGraphicSystemMarker)
         {
             createInstance();
             BaseEntity.BoundingBoxIntersectWith(entityPointer, intersectType, projectionPlane,points, thisGraphicSystemMarker, otherGraphicSystemMarker);
             tr.Dispose();
         }
         [Obsolete("Use the overload taking IntPtr instead.")]
-        public new void BoundingBoxIntersectWith(Entity entityPointer, Intersect intersectType, Plane projectionPlane, Point3dCollection points, long thisGraphicSystemMarker, long otherGraphicSystemMarker)
+        public void BoundingBoxIntersectWith(Entity entityPointer, Intersect intersectType, Plane projectionPlane, Point3dCollection points, long thisGraphicSystemMarker, long otherGraphicSystemMarker)
         {
             createInstance();
             BaseEntity.BoundingBoxIntersectWith(entityPointer, intersectType,projectionPlane, points, thisGraphicSystemMarker, otherGraphicSystemMarker);
             tr.Dispose();
         }
-        public new void DeleteSubentityPaths(FullSubentityPath[] subPaths)
+        public void DeleteSubentityPaths(FullSubentityPath[] subPaths)
         {
             createInstance();
             BaseEntity.DeleteSubentityPaths(subPaths);
             tr.Dispose();
         }
         [OpenMode(OpenMode.ForRead)]
-        public new void Draw()
+        public void Draw()
         {
             createInstance();
             BaseEntity.Draw();
             tr.Dispose();
         }
-        public new void Explode(DBObjectCollection entitySet)
+        public void Explode(DBObjectCollection entitySet)
         {
             createInstance();
             BaseEntity.Explode(entitySet);
             tr.Dispose();
         }
-        public new IntPtrCollection GetGraphicsMarkersAtSubentityPathIntPtr(FullSubentityPath subPath)
+        public  IntPtrCollection GetGraphicsMarkersAtSubentityPathIntPtr(FullSubentityPath subPath)
         {
             createInstance();
             IntPtrCollection GetGraphicsMarkers = BaseEntity.GetGraphicsMarkersAtSubentityPathIntPtr(subPath);
             tr.Dispose();
             return GetGraphicsMarkers;
         }
-        public new void GetGripPoints(Point3dCollection gripPoints, IntegerCollection snapModes, IntegerCollection geometryIds)
+        public void GetGripPoints(Point3dCollection gripPoints, IntegerCollection snapModes, IntegerCollection geometryIds)
         {
             createInstance();
             BaseEntity.GetGripPoints(gripPoints, snapModes,geometryIds);
             tr.Dispose();
         }
-        public new bool GetGripPoints(GripDataCollection grips, double curViewUnitSize, int gripSize, Vector3d curViewDir, GetGripPointsFlags bitFlags)
+        public bool GetGripPoints(GripDataCollection grips, double curViewUnitSize, int gripSize, Vector3d curViewDir, GetGripPointsFlags bitFlags)
         {
             createInstance();
             bool GetGripP = BaseEntity.GetGripPoints(grips, curViewUnitSize, gripSize,curViewDir,bitFlags);
             tr.Dispose();
             return GetGripP;
         }
-        public new bool GetGripPointsAtSubentityPath(FullSubentityPath subPath, GripDataCollection grips, double curViewUnitSize, int gripSize, Vector3d curViewDir, GetGripPointsFlags bitFlags)
+        public bool GetGripPointsAtSubentityPath(FullSubentityPath subPath, GripDataCollection grips, double curViewUnitSize, int gripSize, Vector3d curViewDir, GetGripPointsFlags bitFlags)
         {
             createInstance();
             bool GetGripP = BaseEntity.GetGripPointsAtSubentityPath(subPath, grips, curViewUnitSize, gripSize, curViewDir, bitFlags);
             tr.Dispose();
             return GetGripP;
         }
-        public new void GetObjectSnapPoints(ObjectSnapModes snapMode, int gsSelectionMark, Point3d pickPoint, Point3d lastPoint, Matrix3d viewTransform, Point3dCollection snapPoints, IntegerCollection geometryIds)
+        public void GetObjectSnapPoints(ObjectSnapModes snapMode, int gsSelectionMark, Point3d pickPoint, Point3d lastPoint, Matrix3d viewTransform, Point3dCollection snapPoints, IntegerCollection geometryIds)
         {
             createInstance();
             BaseEntity.GetObjectSnapPoints(snapMode, gsSelectionMark, pickPoint,lastPoint,viewTransform,snapPoints,geometryIds);
             tr.Dispose();
         }
-        public new void GetObjectSnapPoints(ObjectSnapModes snapMode, int gsSelectionMark, Point3d pickPoint, Point3d lastPoint, Matrix3d viewTransform, Point3dCollection snapPoints, IntegerCollection geometryIds, Matrix3d insertionMat)
+        public void GetObjectSnapPoints(ObjectSnapModes snapMode, int gsSelectionMark, Point3d pickPoint, Point3d lastPoint, Matrix3d viewTransform, Point3dCollection snapPoints, IntegerCollection geometryIds, Matrix3d insertionMat)
         {
             createInstance();
             BaseEntity.GetObjectSnapPoints(snapMode, gsSelectionMark, pickPoint, lastPoint, viewTransform, snapPoints, geometryIds, insertionMat);
             tr.Dispose();
         }
-        public new virtual Plane GetPlane()
+        public virtual Plane GetPlane()
         {
             createInstance();
             Plane GetP = BaseEntity.GetPlane();
             tr.Dispose();
             return GetP;
         }
-        public new void GetStretchPoints(Point3dCollection stretchPoints)
+        public void GetStretchPoints(Point3dCollection stretchPoints)
         {
             createInstance();
             BaseEntity.GetStretchPoints(stretchPoints);
             tr.Dispose();
         }
-        public new Entity GetSubentity(FullSubentityPath id)
+        public Entity GetSubentity(FullSubentityPath id)
         {
             createInstance();
             Entity GetSubentity = BaseEntity.GetSubentity(id);
             tr.Dispose();
             return GetSubentity;
         }
-        public new Extents3d GetSubentityGeometricExtents(FullSubentityPath subPath)
+        public Extents3d GetSubentityGeometricExtents(FullSubentityPath subPath)
         {
             createInstance();
             Extents3d GetSubentityGeo = BaseEntity.GetSubentityGeometricExtents(subPath);
             tr.Dispose();
             return GetSubentityGeo;
         }
-        public new FullSubentityPath[] GetSubentityPathsAtGraphicsMarker(SubentityType type, IntPtr gsMark, Point3d pickPoint, Matrix3d viewTransform, ObjectId[] entityAndInsertStack)
+        public FullSubentityPath[] GetSubentityPathsAtGraphicsMarker(SubentityType type, IntPtr gsMark, Point3d pickPoint, Matrix3d viewTransform, ObjectId[] entityAndInsertStack)
         {
             createInstance();
             FullSubentityPath[] GetSubentityPathsAtG = BaseEntity.GetSubentityPathsAtGraphicsMarker(type, gsMark, pickPoint, viewTransform, entityAndInsertStack);
@@ -629,226 +595,205 @@ namespace AutoCad_ARX
             return GetSubentityPathsAtG;
         }
         [Obsolete("Use the overload taking IntPtr instead.")]
-        public new FullSubentityPath[] GetSubentityPathsAtGraphicsMarker(SubentityType type, long gsMark, Point3d pickPoint, Matrix3d viewTransform, int numInserts, ObjectId[] entityAndInsertStack)
+        public FullSubentityPath[] GetSubentityPathsAtGraphicsMarker(SubentityType type, long gsMark, Point3d pickPoint, Matrix3d viewTransform, int numInserts, ObjectId[] entityAndInsertStack)
         {
             createInstance();
             FullSubentityPath[] GetSubentityPathsAtG = BaseEntity.GetSubentityPathsAtGraphicsMarker(type, gsMark, pickPoint, viewTransform, numInserts, entityAndInsertStack);
             tr.Dispose();
             return GetSubentityPathsAtG;
         }
-        public new Entity GetTransformedCopy(Matrix3d transform)
+        public Entity GetTransformedCopy(Matrix3d transform)
         {
             createInstance();
             Entity GetTransformedC = BaseEntity.GetTransformedCopy(transform);
             tr.Dispose();
             return GetTransformedC;
         }
-        public new void Highlight()
+        public void Highlight()
         {
             createInstance();
             BaseEntity.Highlight();
             tr.Dispose();
 
         }
-        public new void Highlight(FullSubentityPath subId, bool highlightAll)
+        public void Highlight(FullSubentityPath subId, bool highlightAll)
         {
             createInstance();
             BaseEntity.Highlight(subId,highlightAll);
             tr.Dispose();
         }
-        public new HighlightStyle HighlightState(FullSubentityPath subId)
+        public HighlightStyle HighlightState(FullSubentityPath subId)
         {
             createInstance();
             HighlightStyle HighlightS = BaseEntity.HighlightState(subId);
             tr.Dispose();
             return HighlightS;
         }
-        public new void IntersectWith(Entity entityPointer, Intersect intersectType, Point3dCollection points, IntPtr thisGraphicSystemMarker, IntPtr otherGraphicSystemMarker)
+        public void IntersectWith(Entity entityPointer, Intersect intersectType, Point3dCollection points, IntPtr thisGraphicSystemMarker, IntPtr otherGraphicSystemMarker)
         {
             createInstance();
             BaseEntity.IntersectWith(entityPointer, intersectType,points,thisGraphicSystemMarker,otherGraphicSystemMarker);
             tr.Dispose();
         }
         [Obsolete("Use the overload taking IntPtr instead.")]
-        public new void IntersectWith(Entity entityPointer, Intersect intersectType, Point3dCollection points, long thisGraphicSystemMarker, long otherGraphicSystemMarker)
+        public void IntersectWith(Entity entityPointer, Intersect intersectType, Point3dCollection points, long thisGraphicSystemMarker, long otherGraphicSystemMarker)
         {
             createInstance();
             BaseEntity.IntersectWith(entityPointer, intersectType, points, thisGraphicSystemMarker, otherGraphicSystemMarker);
             tr.Dispose();
         }
-        public new void IntersectWith(Entity entityPointer, Intersect intersectType, Plane projectionPlane, Point3dCollection points, IntPtr thisGraphicSystemMarker, IntPtr otherGraphicSystemMarker)
+        public void IntersectWith(Entity entityPointer, Intersect intersectType, Plane projectionPlane, Point3dCollection points, IntPtr thisGraphicSystemMarker, IntPtr otherGraphicSystemMarker)
         {
             createInstance();
             BaseEntity.IntersectWith(entityPointer, intersectType, projectionPlane, points, thisGraphicSystemMarker, otherGraphicSystemMarker);
             tr.Dispose();
         }
         [Obsolete("Use the overload taking IntPtr instead.")]
-        public new void IntersectWith(Entity entityPointer, Intersect intersectType, Plane projectionPlane, Point3dCollection points, long thisGraphicSystemMarker, long otherGraphicSystemMarker)
+        public void IntersectWith(Entity entityPointer, Intersect intersectType, Plane projectionPlane, Point3dCollection points, long thisGraphicSystemMarker, long otherGraphicSystemMarker)
         {
             createInstance();
             BaseEntity.IntersectWith(entityPointer, intersectType, projectionPlane, points, thisGraphicSystemMarker, otherGraphicSystemMarker);
             tr.Dispose();
         }
-        public new bool IsContentSnappable()
+        public bool IsContentSnappable()
         {
             createInstance();
             bool IsContentSnap = BaseEntity.IsContentSnappable();
             tr.Dispose();
             return IsContentSnap;
         }
-        public new IntegerCollection JoinEntities(Entity[] otherEntities)
+        public IntegerCollection JoinEntities(Entity[] otherEntities)
         {
             createInstance();
             IntegerCollection JoinEnt = BaseEntity.JoinEntities(otherEntities);
             tr.Dispose();
             return JoinEnt;
         }
-        public new void JoinEntity(Entity secondaryEntity)
+        public void JoinEntity(Entity secondaryEntity)
         {
             createInstance();
             BaseEntity.JoinEntity(secondaryEntity);
             tr.Dispose();
         }
-        public new void List()
+        public void List()
         {
             createInstance();
             BaseEntity.List();
             tr.Dispose();
         }
-        public new void MoveGripPointsAt(IntegerCollection indices, Vector3d offset)
+        public void MoveGripPointsAt(IntegerCollection indices, Vector3d offset)
         {
             createInstance();
             BaseEntity.MoveGripPointsAt(indices, offset);
             tr.Dispose();
         }
-        public new void MoveGripPointsAt(GripDataCollection grips, Vector3d offset, MoveGripPointsFlags bitFlags)
+        public void MoveGripPointsAt(GripDataCollection grips, Vector3d offset, MoveGripPointsFlags bitFlags)
         {
             createInstance();
             BaseEntity.MoveGripPointsAt(grips, offset,bitFlags);
             tr.Dispose();
         }
-        public new void MoveGripPointsAtSubentityPaths(FullSubentityPath[] subPaths, IntPtr[] appData, Vector3d offset, MoveGripPointsFlags bitFlags)
+        public void MoveGripPointsAtSubentityPaths(FullSubentityPath[] subPaths, IntPtr[] appData, Vector3d offset, MoveGripPointsFlags bitFlags)
         {
             createInstance();
             BaseEntity.MoveGripPointsAtSubentityPaths(subPaths, appData, offset, bitFlags);
             tr.Dispose();
         }
-        public new void MoveStretchPointsAt(IntegerCollection indices, Vector3d offset)
+        public void MoveStretchPointsAt(IntegerCollection indices, Vector3d offset)
         {
             createInstance();
             BaseEntity.MoveStretchPointsAt(indices,offset);
             tr.Dispose();
         }
-        public new void PopHighlight(FullSubentityPath subId)
+        public void PopHighlight(FullSubentityPath subId)
         {
             createInstance();
             BaseEntity.PopHighlight(subId);
             tr.Dispose();
         }
-        public new void PushHighlight(FullSubentityPath subId, HighlightStyle highlightStyle)
+        public void PushHighlight(FullSubentityPath subId, HighlightStyle highlightStyle)
         {
             createInstance();
             BaseEntity.PushHighlight(subId,highlightStyle);
             tr.Dispose();
         }
-        public new void RecordGraphicsModified(bool setModified)
+        public void RecordGraphicsModified(bool setModified)
         {
             createInstance();
             BaseEntity.RecordGraphicsModified(setModified);
             tr.Dispose();
         }
-        public new virtual void SaveAs(WorldDraw mode, SaveType st)
+        public virtual void SaveAs(WorldDraw mode, SaveType st)
         {
             createInstance();
             BaseEntity.SaveAs(mode,st);
             tr.Dispose();
         }
-        public new void SetDatabaseDefaults()
+        public void SetDatabaseDefaults()
         {
             createInstance();
             BaseEntity.SetDatabaseDefaults();
             tr.Dispose();
         }
-        public new void SetDatabaseDefaults(Database sourceDatabase)
+        public void SetDatabaseDefaults(Database sourceDatabase)
         {
             createInstance();
             BaseEntity.SetDatabaseDefaults(sourceDatabase);
             tr.Dispose();
         }
-        public new virtual void SetDragStatus(DragStatus status)
+        public virtual void SetDragStatus(DragStatus status)
         {
             createInstance();
             BaseEntity.SetDragStatus(status);
             tr.Dispose();
         }
-        public new virtual void SetGripStatus(GripStatus status)
+        public virtual void SetGripStatus(GripStatus status)
         {
             createInstance();
             BaseEntity.SetGripStatus(status);
             tr.Dispose();
         }
-        public new virtual void SetLayerId(ObjectId newValue, bool allowHidden)
+        public virtual void SetLayerId(ObjectId Value, bool allowHidden)
         {
             createInstance();
-            BaseEntity.SetLayerId(newValue, allowHidden);
+            BaseEntity.SetLayerId(Value, allowHidden);
             tr.Dispose();
         }
-        public new void SetPropertiesFrom(Entity entityPointer)
+        public void SetPropertiesFrom(Entity entityPointer)
         {
             createInstance();
             BaseEntity.SetPropertiesFrom(entityPointer);
             tr.Dispose();
         }
-        public new void SetSubentityGripStatus(GripStatus status, FullSubentityPath subentity)
+        public void SetSubentityGripStatus(GripStatus status, FullSubentityPath subentity)
         {
             createInstance();
             BaseEntity.SetSubentityGripStatus(status, subentity);
             tr.Dispose();
         }
-        public new void TransformBy(Matrix3d transform)
+        public void TransformBy(Matrix3d transform)
         {
             createInstance();
             BaseEntity.TransformBy(transform);
             tr.Dispose();
         }
-        public new void TransformSubentityPathsBy(FullSubentityPath[] subPaths, Matrix3d transform)
+        public void TransformSubentityPathsBy(FullSubentityPath[] subPaths, Matrix3d transform)
         {
             createInstance();
             BaseEntity.TransformSubentityPathsBy(subPaths, transform);
             tr.Dispose();
         }
-        public new void Unhighlight()
+        public void Unhighlight()
         {
             createInstance();
             BaseEntity.Unhighlight();
             tr.Dispose();
         }
-        public new void Unhighlight(FullSubentityPath subId, bool highlightAll)
+        public void Unhighlight(FullSubentityPath subId, bool highlightAll)
         {
             createInstance();
             BaseEntity.Unhighlight(subId,highlightAll);
             tr.Dispose();
         }
-
-
-        //CAST TYPE CONVERSIONS
-
-        static public explicit operator Line(AC_Entity ent)
-        {
-            AC_Transactions tr = new AC_Transactions();
-            Line ln = tr.openObject(ent.ObjectId, OpenMode.ForWrite) as Line;
-            tr.closeObject();
-            return ln;
-        }
-
-        static public explicit operator Curve(AC_Entity ent)
-        {
-            AC_Transactions tr = new AC_Transactions();
-            Curve ln = tr.openObject(ent.ObjectId, OpenMode.ForWrite) as Curve;
-            tr.closeObject();
-            return ln;
-        }
-
-
     }
 }

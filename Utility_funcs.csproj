@@ -117,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="autocad-arx\AC_Curve.cs" />
+    <Compile Include="autocad-arx\AC_DBObject.cs" />
     <Compile Include="autocad-arx\AC_Entity.cs" />
     <Compile Include="autocad-arx\AC_Line.cs" />
     <Compile Include="autocad-arx\AC_Math.cs" />

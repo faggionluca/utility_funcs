@@ -58,7 +58,7 @@ namespace AutoCad_ARX
             } 
         }
 
-        public Point3d EndPoint 
+        public virtual Point3d EndPoint 
         {
             get
             {
@@ -104,7 +104,7 @@ namespace AutoCad_ARX
             }
         }
 
-        public Point3d StartPoint 
+        public virtual Point3d StartPoint 
         {
             get
             {

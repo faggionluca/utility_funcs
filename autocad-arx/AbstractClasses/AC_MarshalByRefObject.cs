@@ -87,6 +87,14 @@ namespace AutoCad_ARX
         }
 
         //CAST TYPE CONVERSIONS
+        static public explicit operator Autodesk.AutoCAD.DatabaseServices.Polyline(AC_MarshalByRefObject ent)
+        {
+            AC_Transactions tr = new AC_Transactions();
+            Autodesk.AutoCAD.DatabaseServices.Polyline ln = tr.openObject(ent.ObjectId, OpenMode.ForWrite) as Autodesk.AutoCAD.DatabaseServices.Polyline;
+            tr.closeObject();
+            return ln;
+        }
+
         static public explicit operator Line(AC_MarshalByRefObject ent)
         {
             AC_Transactions tr = new AC_Transactions();

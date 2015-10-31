@@ -116,17 +116,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="autocad-arx\AC_Curve.cs" />
-    <Compile Include="autocad-arx\AC_DBObject.cs" />
-    <Compile Include="autocad-arx\AC_DisposableWrapper.cs" />
-    <Compile Include="autocad-arx\AC_Drawable.cs" />
-    <Compile Include="autocad-arx\AC_Entity.cs" />
-    <Compile Include="autocad-arx\AC_Line.cs" />
-    <Compile Include="autocad-arx\AC_MarshalByRefObject.cs" />
-    <Compile Include="autocad-arx\AC_Math.cs" />
-    <Compile Include="autocad-arx\AC_RXObject.cs" />
-    <Compile Include="autocad-arx\AC_Settings.cs" />
-    <Compile Include="autocad-arx\AC_Transations.cs" />
+    <Compile Include="autocad-arx\AbstractClasses\AC_Curve.cs" />
+    <Compile Include="autocad-arx\AbstractClasses\AC_DBObject.cs" />
+    <Compile Include="autocad-arx\AbstractClasses\AC_DisposableWrapper.cs" />
+    <Compile Include="autocad-arx\AbstractClasses\AC_Drawable.cs" />
+    <Compile Include="autocad-arx\AbstractClasses\AC_Entity.cs" />
+    <Compile Include="autocad-arx\AbstractClasses\AC_MarshalByRefObject.cs" />
+    <Compile Include="autocad-arx\AbstractClasses\AC_RXObject.cs" />
+    <Compile Include="autocad-arx\DerivedClasses\AC_DBText.cs" />
+    <Compile Include="autocad-arx\DerivedClasses\AC_Line.cs" />
+    <Compile Include="autocad-arx\DerivedClasses\AC_Polyline.cs" />
+    <Compile Include="autocad-arx\HelperClasses\AC_Math.cs" />
+    <Compile Include="autocad-arx\HelperClasses\AC_Settings.cs" />
+    <Compile Include="autocad-arx\Transactions\AC_Transations.cs" />
     <Compile Include="DIMINC.cs" />
     <Compile Include="DIM_Settings.cs" />
     <Compile Include="DISPINFO.cs" />

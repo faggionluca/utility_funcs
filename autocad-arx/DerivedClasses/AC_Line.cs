@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -14,7 +15,7 @@ namespace AutoCad_ARX
 {
     public class AC_Line : AC_Curve
     {
-        protected internal Line line
+        protected internal Line BaseLine
         {
             get
             {
@@ -28,18 +29,18 @@ namespace AutoCad_ARX
 
         public AC_Line() : base()
         {
-            this.line = new Line();
+            this.BaseLine = new Line();
         }
 
         public AC_Line(Point3d pointer1, Point3d pointer2) : base()
         {
-            this.line = new Line(pointer1, pointer2);
+            this.BaseLine = new Line(pointer1, pointer2);
         }
 
         public AC_Line(Line inLine) : base()
         {
             base.ObjectId = inLine.ObjectId;
-            this.line = inLine;
+            this.BaseLine = inLine;
         }
 
         //PROPRIETIES LINE//////////////////
@@ -51,11 +52,11 @@ namespace AutoCad_ARX
                 if (base.isInstanced())
                 {
                     tr.Dispose();
-                    return line.Angle;
+                    return BaseLine.Angle;
                 }
                 else
                 {
-                    return line.Angle;
+                    return BaseLine.Angle;
                 }
             }
         }
@@ -67,11 +68,11 @@ namespace AutoCad_ARX
                 if (base.isInstanced())
                 {
                     tr.Dispose();
-                    return line.Delta;
+                    return BaseLine.Delta;
                 }
                 else
                 {
-                    return line.Delta;
+                    return BaseLine.Delta;
                 }
             }
         }
@@ -83,11 +84,11 @@ namespace AutoCad_ARX
                 if (base.isInstanced())
                 {
                     tr.Dispose();
-                    return line.Length;
+                    return BaseLine.Length;
                 }
                 else
                 {
-                    return line.Length;
+                    return BaseLine.Length;
                 }
             }
         }
@@ -99,23 +100,23 @@ namespace AutoCad_ARX
                 if (base.isInstanced())
                 {
                     tr.Dispose();
-                    return line.Normal;
+                    return BaseLine.Normal;
                 }
                 else
                 {
-                    return line.Normal;
+                    return BaseLine.Normal;
                 }
             }
             set
             {
                 if (base.isInstanced())
                 {
-                    line.Normal = value;
+                    BaseLine.Normal = value;
                     tr.Dispose();
                 }
                 else
                 {
-                    line.Normal = value;
+                    BaseLine.Normal = value;
                 }
             }
         }
@@ -127,23 +128,79 @@ namespace AutoCad_ARX
                 if (base.isInstanced())
                 {
                     tr.Dispose();
-                    return line.Thickness;
+                    return BaseLine.Thickness;
                 }
                 else
                 {
-                    return line.Thickness;
+                    return BaseLine.Thickness;
                 }
             }
             set
             {
                 if (base.isInstanced())
                 {
-                    line.Thickness = value;
+                    BaseLine.Thickness = value;
                     tr.Dispose();
                 }
                 else
                 {
-                    line.Thickness = value;
+                    BaseLine.Thickness = value;
+                }
+            }
+        }
+
+        public override Point3d StartPoint
+        {
+            get
+            {
+                if (base.isInstanced())
+                {
+                    tr.Dispose();
+                    return BaseLine.StartPoint;
+                }
+                else
+                {
+                    return BaseLine.StartPoint;
+                }
+            }
+            set
+            {
+                if (base.isInstanced())
+                {
+                    BaseLine.StartPoint = value;
+                    tr.Dispose();
+                }
+                else
+                {
+                    BaseLine.StartPoint = value;
+                }
+            }
+        }
+
+        public override Point3d EndPoint
+        {
+            get
+            {
+                if (base.isInstanced())
+                {
+                    tr.Dispose();
+                    return BaseLine.EndPoint;
+                }
+                else
+                {
+                    return BaseLine.EndPoint;
+                }
+            }
+            set
+            {
+                if (base.isInstanced())
+                {
+                    BaseLine.EndPoint = value;
+                    tr.Dispose();
+                }
+                else
+                {
+                    BaseLine.EndPoint = value;
                 }
             }
         }

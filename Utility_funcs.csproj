@@ -123,6 +123,7 @@
     <Compile Include="autocad-arx\AbstractClasses\AC_Entity.cs" />
     <Compile Include="autocad-arx\AbstractClasses\AC_MarshalByRefObject.cs" />
     <Compile Include="autocad-arx\AbstractClasses\AC_RXObject.cs" />
+    <Compile Include="autocad-arx\DerivedClasses\AC_Circle.cs" />
     <Compile Include="autocad-arx\DerivedClasses\AC_DBText.cs" />
     <Compile Include="autocad-arx\DerivedClasses\AC_Line.cs" />
     <Compile Include="autocad-arx\DerivedClasses\AC_Polyline.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="DIM_Settings.cs" />
     <Compile Include="DISPINFO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TRIANGULATE.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

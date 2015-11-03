@@ -793,5 +793,7 @@ namespace AutoCad_ARX
             BaseEntity.Unhighlight(subId,highlightAll);
             tr.Dispose();
         }
+
     }
+
 }

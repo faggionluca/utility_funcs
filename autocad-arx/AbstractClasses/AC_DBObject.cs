@@ -726,73 +726,73 @@ namespace AutoCad_ARX
             tr.Dispose();
         }
 
-        public new event EventHandler Cancelled;
+        public event EventHandler Cancelled;
         private void BaseDBObject_Cancelled(object sender, EventArgs e)
         {
             Cancelled(sender, e);
         }
 
-        public new event ObjectEventHandler Copied;
+        public event ObjectEventHandler Copied;
         void BaseDBObject_Copied(object sender, ObjectEventArgs e)
         {
             Copied(sender, e);
         }
 
-        public new event ObjectErasedEventHandler Erased;
+        public event ObjectErasedEventHandler Erased;
         void BaseDBObject_Erased(object sender, ObjectErasedEventArgs e)
         {
             Erased(sender, e);
         }
 
-        public new event EventHandler Goodbye;
+        public event EventHandler Goodbye;
         void BaseDBObject_Goodbye(object sender, EventArgs e)
         {
             Goodbye(sender, e);
         }
 
-        public new event EventHandler Modified;
+        public event EventHandler Modified;
         void BaseDBObject_Modified(object sender, EventArgs e)
         {
             Modified(sender, e);
         }
 
-        public new event EventHandler ModifiedXData;
+        public event EventHandler ModifiedXData;
         void BaseDBObject_ModifiedXData(object sender, EventArgs e)
         {
             ModifiedXData(sender, e);
         }
 
-        public new event EventHandler ModifyUndone;
+        public event EventHandler ModifyUndone;
         void BaseDBObject_ModifyUndone(object sender, EventArgs e)
         {
             ModifyUndone(sender, e);
         }
 
-        public new event ObjectClosedEventHandler ObjectClosed;
+        public event ObjectClosedEventHandler ObjectClosed;
         void BaseDBObject_ObjectClosed(object sender, ObjectClosedEventArgs e)
         {
             ObjectClosed(sender, e);
         }
 
-        public new event EventHandler OpenedForModify;
+        public event EventHandler OpenedForModify;
         void BaseDBObject_OpenedForModify(object sender, EventArgs e)
         {
             OpenedForModify(sender, e);
         }
 
-        public new event EventHandler Reappended;
+        public event EventHandler Reappended;
         void BaseDBObject_Reappended(object sender, EventArgs e)
         {
             Reappended(sender, e);
         }
 
-        public new event ObjectEventHandler SubObjectModified;
+        public event ObjectEventHandler SubObjectModified;
         void BaseDBObject_SubObjectModified(object sender, ObjectEventArgs e)
         {
             SubObjectModified(sender, e);
         }
 
-        public new event EventHandler Unappended;
+        public event EventHandler Unappended;
         void BaseDBObject_Unappended(object sender, EventArgs e)
         {
             Unappended(sender, e);

@@ -13,13 +13,13 @@ using Autodesk.AutoCAD.Geometry;
 
 namespace AutoCad_ARX
 {
-    public class AC_Line : AC_Curve
+    public class AC_Circle : AC_Curve
     {
-        protected internal Line BaseLine
+        protected internal Circle BaseCircle
         {
             get
             {
-                return base.BaseCurve as Line;
+                return base.BaseCurve as Circle;
             }
             set
             {
@@ -27,72 +27,111 @@ namespace AutoCad_ARX
             }
         }
 
-        public AC_Line() : base()
+        public AC_Circle()
+            : base()
         {
-            this.BaseLine = new Line();
+            this.BaseCircle = new Circle();
         }
 
-        public AC_Line(Point3d pointer1, Point3d pointer2) : base()
+        public AC_Circle(Point3d center, Vector3d normal, double radius)
+            : base()
         {
-            this.BaseLine = new Line(pointer1, pointer2);
+            this.BaseCircle = new Circle(center, normal, radius);
         }
 
-        public AC_Line(Line inLine) : base()
+        public AC_Circle(Circle Circle)
         {
-            base.ObjectId = inLine.ObjectId;
-            this.BaseLine = inLine;
+            this.ObjectId = Circle.Id;
+            this.BaseCircle = Circle;
         }
 
-        //PROPRIETIES LINE//////////////////
-
-        public double Angle 
-        {
-            get
-            {
-                if (base.isInstanced())
-                {
-                    tr.Dispose();
-                    return BaseLine.Angle;
-                }
-                else
-                {
-                    return BaseLine.Angle;
-                }
-            }
-        }
-
-        public Vector3d Delta 
+        [Category("Geometry")]
+        public Point3d Center 
         {
             get
             {
                 if (base.isInstanced())
                 {
                     tr.Dispose();
-                    return BaseLine.Delta;
+                    return BaseCircle.Center;
                 }
                 else
                 {
-                    return BaseLine.Delta;
+                    return BaseCircle.Center;
+                }
+            }
+            set
+            {
+                if (base.isInstanced())
+                {
+                    BaseCircle.Center = value;
+                    tr.Dispose();
+                }
+                else
+                {
+                    BaseCircle.Center = value;
                 }
             }
         }
-
-        public double Length
+        [Category("Geometry")]
+        [UnitType(UnitType.Distance)]
+        public double Circumference
         {
             get
             {
                 if (base.isInstanced())
                 {
                     tr.Dispose();
-                    return BaseLine.Length;
+                    return BaseCircle.Circumference;
                 }
                 else
                 {
-                    return BaseLine.Length;
+                    return BaseCircle.Circumference;
+                }
+            }
+            set
+            {
+                if (base.isInstanced())
+                {
+                    BaseCircle.Circumference = value;
+                    tr.Dispose();
+                }
+                else
+                {
+                    BaseCircle.Circumference = value;
                 }
             }
         }
-
+        [Category("Geometry")]
+        [UnitType(UnitType.Distance)]
+        public double Diameter
+        {
+            get
+            {
+                if (base.isInstanced())
+                {
+                    tr.Dispose();
+                    return BaseCircle.Diameter;
+                }
+                else
+                {
+                    return BaseCircle.Diameter;
+                }
+            }
+            set
+            {
+                if (base.isInstanced())
+                {
+                    BaseCircle.Diameter = value;
+                    tr.Dispose();
+                }
+                else
+                {
+                    BaseCircle.Diameter = value;
+                }
+            }
+        }
+        [Category("Geometry")]
         public Vector3d Normal
         {
             get
@@ -100,27 +139,57 @@ namespace AutoCad_ARX
                 if (base.isInstanced())
                 {
                     tr.Dispose();
-                    return BaseLine.Normal;
+                    return BaseCircle.Normal;
                 }
                 else
                 {
-                    return BaseLine.Normal;
+                    return BaseCircle.Normal;
                 }
             }
             set
             {
                 if (base.isInstanced())
                 {
-                    BaseLine.Normal = value;
+                    BaseCircle.Normal = value;
                     tr.Dispose();
                 }
                 else
                 {
-                    BaseLine.Normal = value;
+                    BaseCircle.Normal = value;
                 }
             }
         }
-
+        [Category("Geometry")]
+        [UnitType(UnitType.Distance)]
+        public double Radius
+        {
+            get
+            {
+                if (base.isInstanced())
+                {
+                    tr.Dispose();
+                    return BaseCircle.Radius;
+                }
+                else
+                {
+                    return BaseCircle.Radius;
+                }
+            }
+            set
+            {
+                if (base.isInstanced())
+                {
+                    BaseCircle.Radius = value;
+                    tr.Dispose();
+                }
+                else
+                {
+                    BaseCircle.Radius = value;
+                }
+            }
+        }
+        [Category("General")]
+        [UnitType(UnitType.Distance)]
         public double Thickness
         {
             get
@@ -128,95 +197,40 @@ namespace AutoCad_ARX
                 if (base.isInstanced())
                 {
                     tr.Dispose();
-                    return BaseLine.Thickness;
+                    return BaseCircle.Thickness;
                 }
                 else
                 {
-                    return BaseLine.Thickness;
+                    return BaseCircle.Thickness;
                 }
             }
             set
             {
                 if (base.isInstanced())
                 {
-                    BaseLine.Thickness = value;
+                    BaseCircle.Thickness = value;
                     tr.Dispose();
                 }
                 else
                 {
-                    BaseLine.Thickness = value;
+                    BaseCircle.Thickness = value;
                 }
             }
         }
 
-        public override Point3d StartPoint
-        {
-            get
-            {
-                if (base.isInstanced())
-                {
-                    tr.Dispose();
-                    return BaseLine.StartPoint;
-                }
-                else
-                {
-                    return BaseLine.StartPoint;
-                }
-            }
-            set
-            {
-                if (base.isInstanced())
-                {
-                    BaseLine.StartPoint = value;
-                    tr.Dispose();
-                }
-                else
-                {
-                    BaseLine.StartPoint = value;
-                }
-            }
-        }
-
-        public override Point3d EndPoint
-        {
-            get
-            {
-                if (base.isInstanced())
-                {
-                    tr.Dispose();
-                    return BaseLine.EndPoint;
-                }
-                else
-                {
-                    return BaseLine.EndPoint;
-                }
-            }
-            set
-            {
-                if (base.isInstanced())
-                {
-                    BaseLine.EndPoint = value;
-                    tr.Dispose();
-                }
-                else
-                {
-                    BaseLine.EndPoint = value;
-                }
-            }
-        }
-
-        public static explicit operator AC_Line(Line line)
+        public static explicit operator AC_Circle(Circle circle)
         {
             AC_Transactions tr = new AC_Transactions();
-            AC_Line ln = new AC_Line(line);
-            return ln;
+            AC_Circle cr = new AC_Circle(circle);
+            return cr;
         }
 
-        public static explicit operator AC_Line(Entity line)
+        public static explicit operator AC_Circle(Entity circle)
         {
             AC_Transactions tr = new AC_Transactions();
-            AC_Line ln = new AC_Line(line as Line);
-            return ln;
+            AC_Circle cr = new AC_Circle(circle as Circle);
+            return cr;
         }
+
     }
 }

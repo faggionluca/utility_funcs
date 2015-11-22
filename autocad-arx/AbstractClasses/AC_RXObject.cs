@@ -82,5 +82,30 @@ namespace AutoCad_ARX
             tr.Dispose();
             return X;
         }
+
+        public static explicit operator AC_RXObject(RXObject ent)
+        {
+            AC_Transactions tr = new AC_Transactions();
+            if (ent is Line)
+            {
+                return new AC_Line(ent as Line) as AC_RXObject;
+            }
+            else if (ent is Autodesk.AutoCAD.DatabaseServices.Polyline)
+            {
+                return new AC_Polyline(ent as Autodesk.AutoCAD.DatabaseServices.Polyline) as AC_RXObject;
+            }
+            else if (ent is Circle)
+            {
+                return new AC_Circle(ent as Circle) as AC_RXObject;
+            }
+            else if (ent is DBText)
+            {
+                return new AC_DBText(ent as DBText) as AC_RXObject;
+            }
+            else
+            {
+                throw new InvalidCastException("Cannot convert the type specified to AC_Entity");
+            }
+        }
     }
 }

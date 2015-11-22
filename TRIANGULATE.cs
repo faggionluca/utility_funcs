@@ -20,7 +20,7 @@ namespace Utility_funcs
         {
             buildTriangulations buildT = new buildTriangulations();
             AC_Transactions tr = new AC_Transactions();
-            PromptEntityOptions options = new PromptEntityOptions("Pick a Line to Trangulate");
+            PromptEntityOptions options = new PromptEntityOptions("Pick a Line to Triangulate");
             options.SetRejectMessage("not valid Object \n");
             options.AddAllowedClass(typeof(Line), true);
             PromptEntityResult sel = tr.AC_Doc.Editor.GetEntity(options);
@@ -31,13 +31,12 @@ namespace Utility_funcs
             }
         }
 
-
         [CommandMethod("HIDETRIANGULATE")]
         public void HideTriangulate()
         {
             Triangulations triangulation = new Triangulations();
             AC_Transactions tr = new AC_Transactions();
-            PromptEntityOptions options = new PromptEntityOptions("Pick a Line to Trangulate");
+            PromptEntityOptions options = new PromptEntityOptions("Pick a Line to Hide Triangulations");
             options.SetRejectMessage("not valid Object \n");
             options.AddAllowedClass(typeof(Line), true);
             PromptEntityResult sel = tr.AC_Doc.Editor.GetEntity(options);
@@ -53,7 +52,7 @@ namespace Utility_funcs
         {
             Triangulations triangulation = new Triangulations();
             AC_Transactions tr = new AC_Transactions();
-            PromptEntityOptions options = new PromptEntityOptions("Pick a Line to Trangulate");
+            PromptEntityOptions options = new PromptEntityOptions("Pick a Line to remove Triangulations");
             options.SetRejectMessage("not valid Object \n");
             options.AddAllowedClass(typeof(Line), true);
             PromptEntityResult sel = tr.AC_Doc.Editor.GetEntity(options);
@@ -69,7 +68,7 @@ namespace Utility_funcs
         {
             Triangulations triangulation = new Triangulations();
             AC_Transactions tr = new AC_Transactions();
-            PromptEntityOptions options = new PromptEntityOptions("Pick a Line to Trangulate");
+            PromptEntityOptions options = new PromptEntityOptions("Pick a Line to show Triangulations");
             options.SetRejectMessage("not valid Object \n");
             options.AddAllowedClass(typeof(Line), true);
             PromptEntityResult sel = tr.AC_Doc.Editor.GetEntity(options);
@@ -84,13 +83,102 @@ namespace Utility_funcs
         {
             Triangulations triangulation = new Triangulations();
             AC_Transactions tr = new AC_Transactions();
-            PromptEntityOptions options = new PromptEntityOptions("Pick a Line to Trangulate");
+            PromptEntityOptions options = new PromptEntityOptions("Pick a Line to modify Triangulations");
             options.SetRejectMessage("not valid Object \n");
             options.AddAllowedClass(typeof(Line), true);
             PromptEntityResult sel = tr.AC_Doc.Editor.GetEntity(options);
             if (sel.Status == PromptStatus.OK)
             {
                 triangulation.Modify((AC_Line)tr.openObjectErased(sel.ObjectId));
+            }
+        }
+
+        [CommandMethod("SHOWALLTRIANGULATE")]
+        public void ShowAllTriangulate()
+        {
+            Triangulations triangulation = new Triangulations();
+            AC_Transactions tr = new AC_Transactions();
+            Transaction trans = tr.start_Transaction();
+            tr.openBlockTables(OpenMode.ForRead, OpenMode.ForRead);
+            foreach (ObjectId id in tr.AC_blockTableRecord)
+            {
+                try
+                {
+                    AC_Entity ent = (AC_Entity)tr.openObjectErased(id);
+                    if (ent.BaseEntity is Line)
+                    {
+                        AC_Line line = (AC_Line)ent;
+                        ResultBuffer rb = line.XData;
+                        if (rb != null)
+                        {
+                            //FIND XDATA GUID
+                            int index = 0;
+                            string guid = null;
+                            foreach (TypedValue tv in rb)
+                            {
+                                if (index == 3)
+                                {
+                                    guid = tv.Value.ToString();
+                                }
+                                index++;
+                            }
+
+                            if (guid != null)
+                            {
+                                triangulation.Show(line);
+                            }
+                        }
+                    }
+                    tr.Dispose(trans);
+                }
+                catch
+                {
+                    tr.AC_Doc.Editor.WriteMessage("Skipped a not Entity Object");
+                }
+            }
+        }
+
+        [CommandMethod("HIDEALLTRIANGULATE")]
+        public void HideAllTriangulate()
+        {
+            Triangulations triangulation = new Triangulations();
+            AC_Transactions tr = new AC_Transactions();
+            Transaction trans = tr.start_Transaction();
+            tr.openBlockTables(OpenMode.ForRead, OpenMode.ForRead);
+            foreach (ObjectId id in tr.AC_blockTableRecord)
+            {
+                try{
+                    AC_Entity ent = (AC_Entity)tr.openObjectErased(id);
+                    if (ent.BaseEntity is Line)
+                    {
+                        AC_Line line = (AC_Line)ent;
+                        ResultBuffer rb = line.XData;
+                        if (rb != null)
+                        {
+                            //FIND XDATA GUID
+                            int index = 0;
+                            string guid = null;
+                            foreach (TypedValue tv in rb)
+                            {
+                                if (index == 3)
+                                {
+                                    guid = tv.Value.ToString();
+                                }
+                                index++;
+                            }
+
+                            if (guid != null)
+                            {
+                                triangulation.Hide(line);
+                            }
+                        }
+                    }
+                    tr.Dispose(trans);
+                }
+                catch
+                {
+                    tr.AC_Doc.Editor.WriteMessage("Skipped a not Entity Object");
+                }
             }
         }
 
@@ -272,12 +360,13 @@ namespace Utility_funcs
                 }
             }
 
-            public void Hide(AC_Line line)
+            public bool Hide(AC_Line line)
             {
                 ResultBuffer rb = line.XData;
                 if (rb == null)
                 {
                     tr.AC_Doc.Editor.WriteMessage("This Line doesn't have triangulations \n");
+                    return false;
                 }
                 else
                 {
@@ -293,25 +382,35 @@ namespace Utility_funcs
                         index++;
                     }
                     removeObjects(guid);
+                    return true;
                 }
             }
 
-            public void Remove(AC_Line line)
+            public bool Remove(AC_Line line)
             {
-                Hide(line);
-                line.XData = new ResultBuffer(new TypedValue((int)DxfCode.ExtendedDataRegAppName, "TRIANGULATE"));
+                if (Hide(line))
+                {
+                    line.XData = new ResultBuffer(new TypedValue((int)DxfCode.ExtendedDataRegAppName, "TRIANGULATE"));
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
 
             }
 
             public void Modify(AC_Line line)
             {
-                Remove(line);
-                buildTriangulations build = new buildTriangulations();
-                if (build.askForDistances(line))
+                if (Remove(line))
                 {
-                    ResultBuffer rb = new ResultBuffer(new TypedValue((int)DxfCode.ExtendedDataRegAppName, "TRIANGULATE"), new TypedValue((int)DxfCode.ExtendedDataAsciiString, build.radius[0].ToString()), new TypedValue((int)DxfCode.ExtendedDataAsciiString, build.radius[1].ToString()), new TypedValue((int)DxfCode.ExtendedDataAsciiString, Guid.NewGuid().ToString()));
-                    line.XData = rb;
-                    Show(line);
+                    buildTriangulations build = new buildTriangulations();
+                    if (build.askForDistances(line))
+                    {
+                        ResultBuffer rb = new ResultBuffer(new TypedValue((int)DxfCode.ExtendedDataRegAppName, "TRIANGULATE"), new TypedValue((int)DxfCode.ExtendedDataAsciiString, build.radius[0].ToString()), new TypedValue((int)DxfCode.ExtendedDataAsciiString, build.radius[1].ToString()), new TypedValue((int)DxfCode.ExtendedDataAsciiString, Guid.NewGuid().ToString()));
+                        line.XData = rb;
+                        Show(line);
+                    }
                 }
             }
 

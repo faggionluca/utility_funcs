@@ -67,10 +67,36 @@ namespace AutoCad_ARX
 
         public void Dispose()
         {
-            AC_Tr.Commit();
-            AC_blockTable.Dispose();
-            AC_blockTableRecord.Dispose();
-            AC_Tr.Dispose();
+            if (!AC_blockTable.IsDisposed) 
+            {
+                AC_blockTable.Dispose();
+            }
+            if (!AC_blockTableRecord.IsDisposed)
+            {
+                AC_blockTableRecord.Dispose();
+            }
+            if(!AC_Tr.IsDisposed)
+            {
+                AC_Tr.Commit();
+                AC_Tr.Dispose();
+            }
+        }
+
+        public void Dispose(Transaction tr)
+        {
+            if (!AC_blockTable.IsDisposed) 
+            {
+                AC_blockTable.Dispose();
+            }
+            if (!AC_blockTableRecord.IsDisposed)
+            {
+                AC_blockTableRecord.Dispose();
+            }
+            if (!tr.IsDisposed)
+            {
+                tr.Commit();
+                tr.Dispose();
+            }
         }
 
         //FUNCTIONS//////////////////////////////////////////////////////////////////////////////////

@@ -41,7 +41,7 @@ namespace AutoCad_ARX
             this.BasePolyline = new Polyline(vertices);
         }
 
-        public bool Closed
+        public new bool Closed
         {
             get
             {
